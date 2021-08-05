@@ -14,7 +14,9 @@ import Web3 from 'web3';
 import { useMoralis } from 'react-moralis';
 
 // images
-// import MetamaskLogo from '../../public/images/metamask.svg';
+import MetaMaskSVG  from '../../assets/metamask.svg';
+import  PortisSVG  from '../../assets/portis.svg';
+
 // import PortisLogo from '../../public/images/portis.svg';
 
 const ModelBox = (props) => {
@@ -36,7 +38,6 @@ const ModelBox = (props) => {
           'dc462473-0779-43ff-810f-11c07bf4eb2d',
           'maticMumbai'
         );
-
         this.provider = portis.provider;
         const MWeb3 = typeof Web3 === 'function' ? Web3 : window.Web3;
         this.web3 = new MWeb3(this.provider);
@@ -68,7 +69,7 @@ const ModelBox = (props) => {
           <ModalBody>
             <Flex direction="column" align="center" justify="center">
               <Flex direction="column" align="center" justify="center">
-                <Image src="%PUBLIC_URL%/metamask.svg" alt="Metamask Icon" width="100px" />
+                <Image src={MetaMaskSVG} alt="Metamask Icon" width="100px" />
                 <Button
                   size="lg"
                   display={{ base: 'none', md: 'inline-flex' }}
@@ -92,7 +93,7 @@ const ModelBox = (props) => {
                 justify="center"
                 marginTop="-40"
               >
-                <Image src="%PUBLIC_URL%/portis.svg" alt="Portis Icon" width="80px" />
+                <Image src={PortisSVG} alt="Portis Icon" width="80px" />
                 <Button
                   size="lg"
                   display={{ base: 'none', md: 'inline-flex' }}

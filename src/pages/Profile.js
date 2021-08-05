@@ -33,6 +33,7 @@ import {
   FiSearch,
   FiBell,
 } from "react-icons/fi";
+import {Link as RouterLink} from "react-router-dom"
 
 export default function Profile() {
   const [display, changeDisplay] = useState("hide");
@@ -114,6 +115,18 @@ export default function Profile() {
                 >
                   <Icon as={FiBox} fontSize="2xl" />
                   <Text ml={2}>Assets</Text>
+                </Link>
+              </Flex>
+              <Flex className="sidebar-items" mr={[2, 6, 0, 0, 0]} mt="10px">
+                <Link
+                  as={RouterLink}
+                  to="/protocol"
+                  display={["none", "none", "flex", "flex", "flex"]}
+                  href="#"
+                  _hover={{textDecor: "none"}}
+                >
+                  <Icon as={FiDollarSign} fontSize="2xl" />
+                  <Text ml={2}>Protocol</Text>
                 </Link>
               </Flex>
             </Flex>

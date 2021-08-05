@@ -39,7 +39,7 @@ import {
   AiOutlineBulb,
 } from "react-icons/ai";
 import { useMoralis } from "react-moralis";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as ReachLink } from "react-router-dom";
 
 // Components
 import MobileNav from "./MobileNav";
@@ -83,9 +83,9 @@ export default function WithSubnavigation() {
             color={useColorModeValue("white", "white")}
             fontWeight={800}
           >
-            <RouterLink to='/'>
+            <ReachLink to='/'>
             DAM Finance
-            </RouterLink>
+            </ReachLink>
           </Text>
           <Text color="white" ml={1}>{user ? user.get("username"):"No User"}</Text>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
@@ -182,8 +182,8 @@ const DesktopNav = () => {
             <PopoverTrigger>
               <Link
                 p={2}
-                as={RouterLink}
-                href={navItem.href ?? "#"}
+                as={ReachLink}
+                to={navItem.href}
                 fontSize={"sm"}
                 fontWeight={500}
                 color={linkColor}
@@ -222,7 +222,7 @@ const DesktopNav = () => {
 const DesktopSubNav = ({ label, href, subLabel }) => {
   return (
     <Link
-      as={RouterLink}
+      as={ReachLink}
       to={href}
       role={"group"}
       display={"block"}
@@ -270,6 +270,7 @@ const NAV_ITEMS = [
     label: "Profile",
     href: "/profile",
   },
+
   //   {
   //     label: "Find Work",
   //     children: [

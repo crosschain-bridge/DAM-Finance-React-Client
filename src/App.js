@@ -8,6 +8,7 @@ import {
 import Profile from "./pages/Profile"
 import Valve from "./pages/Valve"
 import Home from "./pages/Home"
+import Protocol from "./pages/Protocol";
 
 
 function App() {
@@ -19,9 +20,13 @@ function App() {
           <Route path="/valve">
             <Valve />
           </Route>
+          <Route path="/protocol">
+            <Protocol />
+          </Route>
           <Route path="/">
             <Home />
           </Route>
+          
     </Switch>
   );
 }
