@@ -1,4 +1,5 @@
 import SuperfluidSDK from "@superfluid-finance/js-sdk";
+import aaveDAIxDetails from './denominationAsset.json';
 import { 
 //    getTimeStamp, 
 //    getDate, 
@@ -14,7 +15,7 @@ const mweb3 = mWeb3();
 
 // let web3; // Get this from Moralis
 let aaveDAIx; // Ideally we can get this from a token list of sorts
-let sf;
+export let sf;
 
 const toBN = (number) => mweb3.utils.toBN(number);
 
@@ -22,7 +23,6 @@ const toBN = (number) => mweb3.utils.toBN(number);
 export async function initSuperfluid() {
 
   const web3 = await mweb3;
-  console.log("ACCOUNTS",await web3.eth.getAccounts());
   // const {Moralis} = useMoralis();
   // let web3 =await Moralis.Web3.enable();
   // web3 = new Web3(window.ethereum);
@@ -36,21 +36,20 @@ export async function initSuperfluid() {
   await sf.initialize();
 
   aaveDAIx = sf.tokens.aaveDAIx;
-  console.log(aaveDAIx);
 
   // await sf.host.batchCall(createBatchCall());
 }
 
 // To run this function, initSuperfluid() must be called first
-// This function can be used to create, modify and terminate a flow
-export async function flow(account, recipient, flowrate, token) {
+// This function can be used to modify and terminate a flow
+export async function modifyFlow(account, comptrollerAddr, flowrate) {
   const user = await sf.user({
     address: account,
-    token: token,
+    token: aaveDAIxDetails.address,
   });
 
   await user.flow({
-    recipient: recipient,
+    recipient: comptrollerAddr,
     flowRate: flowrate,
   });
 
@@ -62,14 +61,22 @@ export async function flow(account, recipient, flowrate, token) {
 
 // This function is used to updgrade aaveDAI to aaveDAIx
 // and create a constant flow to a comptroller all in one transaction
-export function createBatchCall(
-  upgradeAmount = 0,
-  depositAmount = 0,
+export function createFlow(
+  upgradeAmount,
+  depositAmount,
   comptrollerAddr
 ) {
   console.log("Beginning batch call...");
   
-  return [
+  sf.host.batchCall([
+    [
+      1,
+      aaveDAIx.address,
+      mweb3.eth.abi.encodeParameters(
+          ["address", "uint256"],
+          [comptrollerAddr, convertTo(depositAmount, 18)]
+      )
+    ],
     [
       101, // upgrade 'upgradeAmount' aaveDAIx to start a flow to a comptroller
       aaveDAIx.address,
@@ -94,5 +101,5 @@ export function createBatchCall(
         ]
       ),
     ],
-  ];
+  ]);
 }

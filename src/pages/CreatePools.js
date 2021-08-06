@@ -10,14 +10,18 @@ import {
   InputRightElement,
   Select,
 } from "@chakra-ui/react";
-import ComptrollerFactory from "../abis/ComptrollerFactory.json"
-import DAMPoolFactory from "../abis/DAMPoolFactory.json"
+import {sf} from '../superfluid'
+import { useState, useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import assets from "../denominationAsset.json"
-import { useState, useEffect } from "react";
+import DAMPoolFactory from "../abis/DAMPoolFactory.json"
+import ComptrollerFactory from "../abis/ComptrollerFactory.json"
+import ComptrollerV2 from '../abis/ComptrollerV2.json'
+
 export default function CreatePools() {
-  const { web3 } = useMoralis();
+  const { web3, user } = useMoralis();
+
   const [ data, setData ] = useState({
     manager: "",
     poolName: "",
@@ -25,12 +29,45 @@ export default function CreatePools() {
   });
 
   const handleSubmit = () => {
-    console.log(data);   
+    (async () =>  {
+      try {
+        // DAMPool Contract
+        const DAMPoolFactoryContract = new web3.eth.Contract(DAMPoolFactory.abi, DAMPoolFactory.address)
+        // Comptroller Contract
+        const ComptrollerFactoryContract = new web3.eth.Contract(ComptrollerFactory.abi, ComptrollerFactory.address)
+
+        // Creating Comptroller
+        let comptrollerTx = await ComptrollerFactoryContract.methods.createComptroller(
+            sf.host.address,
+            sf.agreements.cfa.address,
+            assets[0].address
+          ).send({ from: user.get("ethAddress")});
+        // Fetching comptroller address from events
+        let comptrollerAddr = comptrollerTx.events.ComptrollerCreated.returnValues._comptroller;
+        // New Comptroller Contract
+        const comptrollerContract = new web3.eth.Contract(ComptrollerV2, comptrollerAddr);
+
+        
+        // Creating DAMPool
+        const damPoolTx = await DAMPoolFactoryContract.methods.createDAMPool([data.manager],data.poolName,data.assetName,assets[0].address,comptrollerAddr).send({ from: user.get("ethAddress")});
+        // DAMPool Address
+        let DAMPoolAddr = damPoolTx.events.DAMPoolCreated.returnValues._DAMPool;
+        
+        // Add DAM Pool address to Comptroller
+        await comptrollerContract.methods.setDAMPool(DAMPoolAddr).send({ from: user.get("ethAddress") });
+
+        console.log("New comptroller address: ", comptrollerAddr);
+        console.log("New DAMPool Address: ", DAMPoolAddr);
+      } catch(e) {
+        console.log(e)
+      }
+    })()
   }
 
   const handleSelect = (e) => {
     setData({ ...data, assetName: e.target.value });
   };
+
   return (
     <Box p={20}>
       <Stack spacing={3}>

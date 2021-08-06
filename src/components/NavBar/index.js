@@ -35,6 +35,7 @@ import {
   AiOutlineBug,
   AiOutlineBulb,
 } from "react-icons/ai";
+import { useState,useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import { Link as ReachLink } from "react-router-dom";
 import { useClipboard } from "@chakra-ui/react";
@@ -58,7 +59,7 @@ export default function WithSubnavigation() {
     logout,
     isLoggingOut,
   } = useMoralis();
-  console.log(user);
+
   const address = user ? user.get("ethAddress") : "No Address Found";
   const { hasCopied, onCopy } = useClipboard(address);
 

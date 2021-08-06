@@ -1,3 +1,4 @@
+import {useEffect} from "react"
 import {Box,Heading} from "@chakra-ui/react"
 import {
   BrowserRouter as Router,
@@ -6,6 +7,7 @@ import {
   Link
 } from "react-router-dom";
 import { useMoralis } from "react-moralis";
+import {initSuperfluid} from './superfluid'
 import Profile from "./pages/Profile"
 import Valve from "./pages/Valve"
 import Home from "./pages/Home"
@@ -22,8 +24,21 @@ function App() {
     isAuthenticating,
     Moralis,
     web3,
+    enableWeb3,
     logout,
   } = useMoralis();
+
+  useEffect( () => {
+    if (user){
+      enableWeb3()
+    }  
+  },[user])
+
+  useEffect(() => {
+    if (user && web3)
+      initSuperfluid()
+  },[user, web3])
+
   return (
     <Box>
         <Switch>

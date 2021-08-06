@@ -39,14 +39,10 @@ export default function Home() {
   const { Moralis, user, isAuthenticated } = useMoralis();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  console.log(isAuthenticated, "IS AUHT");
-  // console.log("USER",user.getUsername());
-  // console.log("USERD ",user.attributes)
-
   const getBalances = async () => {
     const options = {
-      chain: "matic",
-      address: "0x452181dAe31Cf9f42189df71eC64298993BEe6d3",
+      chain: "mumbai",
+      address: user.get("ethAddress"),
     };
     const balances = await Moralis.Web3.getAllERC20(options);
     let b = balances[0].balance / 10 ** 18;
@@ -55,8 +51,8 @@ export default function Home() {
 
   const getTransaction = async () => {
     const options = {
-      chain: "matic",
-      address: "0x452181dAe31Cf9f42189df71eC64298993BEe6d3",
+      chain: "mumbai",
+      address: user.get("ethAddress"),
       order: "desc",
     };
     const transactions = await Moralis.Web3.getTransactions(options);

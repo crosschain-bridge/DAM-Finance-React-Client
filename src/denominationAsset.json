@@ -1,7 +1,5 @@
-[
-    {
-        "name":"aaveDAI",
-        "superName":"aaveDAIx",
-        "address":"0x001b3b4d0f3714ca98ba10f6042daebf0b1b7b6f"
-    }
-]
+[{
+    "name":"aaveDAI",
+    "superName":"aaveDAIx",
+    "address":"0x001b3b4d0f3714ca98ba10f6042daebf0b1b7b6f"
+}]
