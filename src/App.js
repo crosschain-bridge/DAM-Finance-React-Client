@@ -11,7 +11,7 @@ import Valve from "./pages/Valve"
 import Home from "./pages/Home"
 import Protocol from "./pages/Protocol";
 import ErrorPage from "./pages/ErrorPage"
-
+import CreatePools from "./pages/CreatePools";
 
 function App() {
 
@@ -26,23 +26,23 @@ function App() {
   } = useMoralis();
   return (
     <Box>
-      {isAuthenticated ? (
         <Switch>
-        <Route path="/profile">
+         <Route path="/createpools">
+            <CreatePools />
+          </Route>
+        <Route exact path="/profile">
             <Profile />
           </Route>
-          <Route path="/valve">
+          <Route exact path="/valve">
             <Valve />
           </Route>
-          <Route path="/protocol">
+          <Route exact path="/protocol">
             <Protocol />
           </Route>
-          <Route path="/">
+          <Route exact path="/">
             <Home />
           </Route>
     </Switch>
-      ) : <ErrorPage />
-    }
     </Box>
   )
 }

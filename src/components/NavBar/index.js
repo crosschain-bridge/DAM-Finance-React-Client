@@ -14,10 +14,6 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Avatar,
   AvatarBadge,
   Tooltip
@@ -25,9 +21,7 @@ import {
 import {
   HamburgerIcon,
   CloseIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
-  SettingsIcon,
 } from "@chakra-ui/icons";
 import {
   HiDotsHorizontal,
@@ -60,6 +54,7 @@ export default function WithSubnavigation() {
     isWeb3EnableLoading,
     web3EnableError,
     user,
+    isAuthenticating,
     logout,
     isLoggingOut,
   } = useMoralis();
@@ -115,14 +110,12 @@ export default function WithSubnavigation() {
           spacing={6}
         >
           <Flex align="center" justify="center">
-
-            <Avatar bg="purple.100" size="md" mr={4}>
+            <Avatar bg="purple.100" size="md" mr={2}>
               <AvatarBadge
                 boxSize="1.25em"
                 bg={user ? "green.500" : "red.500"}
               />
             </Avatar>
-            <EthIcon />
             <Tooltip hasArrow label="Click to Copy address" colorScheme="messenger">
             <Button
               ml={2}
@@ -133,15 +126,13 @@ export default function WithSubnavigation() {
             {hasCopied ? "Copied" : "Ethereum Address"}
             </Button>
             </Tooltip>
-          </Flex>
           {/* Logout */}
           <Button
-            isLoading={isLoggingOut}
-            onClick={() => logout}
-            colorScheme="purple"
-          >
-            Logout
-          </Button>
+                disabled={isAuthenticating}
+                colorScheme="whiteAlpha"
+                variant="ghost"
+                mx={2}
+                onClick={() => logout()}>Logout</Button>
           <Button
             onClick={onOpen}
             fontSize={"sm"}
@@ -155,6 +146,8 @@ export default function WithSubnavigation() {
           >
             Connect Wallet
           </Button>
+          </Flex>
+        
           <ModelBox isOpen={isOpen} onClose={onClose} />
         </Stack>
       </Flex>

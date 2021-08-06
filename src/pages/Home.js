@@ -12,6 +12,7 @@ import {
   useDisclosure,
   Stack,
   Input,
+  SlideFade,
 } from "@chakra-ui/react";
 import {
   Modal,
@@ -32,6 +33,7 @@ import { useMoralis } from "react-moralis";
 import NavBar from "../components/NavBar";
 import DAMTable from "../components/table/Table";
 import {initSuperfluid,createBatchCall,flow} from "../superfluid"
+import {Link as RouterLink} from "react-router-dom"
 
 export default function Home() {
   const { Moralis, user, isAuthenticated } = useMoralis();
@@ -88,63 +90,16 @@ export default function Home() {
             fontSize={"sm"}
             fontWeight={600}
             color={"white"}
+            as={RouterLink}
+            to='/createpools'
             bgGradient="linear(to-r, cyan.400, blue.500)"
-            onClick={onOpen}
+            
             _hover={{
               bgGradient: "linear(to-l, cyan.500, blue.400)",
             }}
           >
             Deposites
           </Button>
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Create Pool</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Stack spacing={3}>
-                  <FormControl >
-                    <FormLabel>Manager</FormLabel>
-                    <Input type="text" />
-                    <FormHelperText>
-                      We'll never share your address.
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl >
-                    <FormLabel>Name</FormLabel>
-                    <Input type="text" />
-                    <FormHelperText>
-                      We'll never share
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl >
-                    <FormLabel>Denomination Asset</FormLabel>
-                    <Input type="text" />
-                    <FormHelperText>
-                      We'll never share 
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Denomination Asset Address</FormLabel>
-                    <Input type="text" />
-                    <FormHelperText>
-                      We'll never share
-                    </FormHelperText>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Comptroller</FormLabel>
-                    <Input type="text" />
-                    <FormHelperText>
-                      We'll never share 
-                    </FormHelperText>
-                  </FormControl>
-                </Stack>
-              </ModalBody>
-              <ModalFooter>
-                <Button variant="ghost">Submit</Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
         </Flex>
         {/* Tabs for table content */}
         <Tabs variant="line" mt={30} w="100%" p={3}>
