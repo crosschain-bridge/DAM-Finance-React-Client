@@ -70,7 +70,7 @@ export function createFlow(
   
   sf.host.batchCall([
     [
-      1,
+      1, // Approving ERC-20 token (aaveDAIx) for depositing to comptroller
       aaveDAIx.address,
       mweb3.eth.abi.encodeParameters(
           ["address", "uint256"],

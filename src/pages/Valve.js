@@ -11,7 +11,18 @@ import {
   Select,
   ButtonGroup,
   Wrap,
+  Input
 } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure
+} from "@chakra-ui/react"
 import NavBar from "../components/NavBar/index";
 import Graph from "../components/Graph/index";
 import WrapCard from "../components/WrapCard";
@@ -26,7 +37,7 @@ const Valve = () => {
     })
     console.log(data);
   }
-
+  const { isOpen, onOpen, onClose } = useDisclosure()
   useEffect(() => {
     getData();
   },[])
@@ -53,13 +64,29 @@ const Valve = () => {
             fontWeight={600}
             color={"white"}
             bgGradient="linear(to-r, cyan.400, blue.500)"
-            href={"#"}
+            onClick={onOpen}
             _hover={{
               bgGradient: "linear(to-l, cyan.500, blue.400)",
             }}
           >
             Deposite
           </Button>
+          <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Flow Tokens</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input placeholder="Flow Amount" />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost">Create Flow</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
         </Flex>
         <Box m="50px 0 0 30px">
           <Text fontSize="sm" color="gray.500">
