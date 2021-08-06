@@ -19,7 +19,8 @@ import {
   MenuList,
   MenuItem,
   Avatar,
-  AvatarBadge
+  AvatarBadge,
+  Tooltip
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -42,6 +43,9 @@ import {
 } from "react-icons/ai";
 import { useMoralis } from "react-moralis";
 import { Link as ReachLink } from "react-router-dom";
+import { useClipboard } from "@chakra-ui/react";
+import EthIcon from "../../assets/EthIcon";
+import { ReactComponent as EIcon } from "../../assets/eth.svg";
 
 // Components
 import MobileNav from "./MobileNav";
@@ -49,7 +53,19 @@ import ModelBox from "./ModelBox";
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle, onOpen, onClose } = useDisclosure();
-  const { web3, enableWeb3, isWeb3Enabled, isWeb3EnableLoading, web3EnableError,user,logout,isLoggingOut } = useMoralis()
+  const {
+    web3,
+    enableWeb3,
+    isWeb3Enabled,
+    isWeb3EnableLoading,
+    web3EnableError,
+    user,
+    logout,
+    isLoggingOut,
+  } = useMoralis();
+  console.log(user);
+  const address = user ? user.get("ethAddress") : "No Address Found";
+  const { hasCopied, onCopy } = useClipboard(address);
 
   return (
     <Box>
@@ -85,9 +101,7 @@ export default function WithSubnavigation() {
             color={useColorModeValue("white", "white")}
             fontWeight={800}
           >
-            <ReachLink to='/'>
-            DAM Finance
-            </ReachLink>
+            <ReachLink to="/">DAM Finance</ReachLink>
           </Text>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
@@ -100,6 +114,34 @@ export default function WithSubnavigation() {
           direction={"row"}
           spacing={6}
         >
+          <Flex align="center" justify="center">
+
+            <Avatar bg="purple.100" size="md" mr={4}>
+              <AvatarBadge
+                boxSize="1.25em"
+                bg={user ? "green.500" : "red.500"}
+              />
+            </Avatar>
+            <EthIcon />
+            <Tooltip hasArrow label="Click to Copy address" colorScheme="messenger">
+            <Button
+              ml={2}
+              onClick={onCopy}
+              colorScheme="linkedin"
+              variant="outline"
+            >
+            {hasCopied ? "Copied" : "Ethereum Address"}
+            </Button>
+            </Tooltip>
+          </Flex>
+          {/* Logout */}
+          <Button
+            isLoading={isLoggingOut}
+            onClick={() => logout}
+            colorScheme="purple"
+          >
+            Logout
+          </Button>
           <Button
             onClick={onOpen}
             fontSize={"sm"}
@@ -114,15 +156,6 @@ export default function WithSubnavigation() {
             Connect Wallet
           </Button>
           <ModelBox isOpen={isOpen} onClose={onClose} />
-          {/* Setting Button */}
-          <Stack>
-          <Avatar bg="purple.100" size="xs" >
-            <AvatarBadge boxSize="1.25em" bg={user ? "green.500" : "red.500"} />
-          </Avatar>
-          <Text fontSize="xs" color="gray.500">{user ? user.get("ethAddress"):"No Connected"}</Text>
-          </Stack>
-          {/* Menu Button */}
-         <Button isLoading={isLoggingOut} onClick={() => logout} colorScheme="purple">Logout</Button>
         </Stack>
       </Flex>
 
