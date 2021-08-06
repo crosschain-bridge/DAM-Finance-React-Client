@@ -8,6 +8,8 @@
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@portis/web3": "^4.0.5",
+    "@superfluid-finance/js-sdk": "^0.5.1",
+    "@truffle/contract": "^4.3.27",
     "axios": "^0.21.1",
     "framer-motion": "^4",
     "moralis": "^0.0.30",

@@ -31,6 +31,7 @@ import {
 import { useMoralis } from "react-moralis";
 import NavBar from "../components/NavBar";
 import DAMTable from "../components/table/Table";
+import {initSuperfluid,createBatchCall,flow} from "../superfluid"
 
 export default function Home() {
   const { Moralis, user, isAuthenticated } = useMoralis();
@@ -81,6 +82,7 @@ export default function Home() {
           </Text>
           <Button onClick={getBalances}>Get Balance</Button>
           <Button onClick={getTransaction}>Get Transaction</Button>
+          <Button onClick={initSuperfluid}>SuperFuild</Button>
           <Button
             display={{ base: "none", md: "inline-flex" }}
             fontSize={"sm"}

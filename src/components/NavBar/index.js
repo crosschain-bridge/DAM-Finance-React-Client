@@ -18,6 +18,8 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Avatar,
+  AvatarBadge
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -47,7 +49,7 @@ import ModelBox from "./ModelBox";
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle, onOpen, onClose } = useDisclosure();
-  const { web3, enableWeb3, isWeb3Enabled, isWeb3EnableLoading, web3EnableError,user } = useMoralis()
+  const { web3, enableWeb3, isWeb3Enabled, isWeb3EnableLoading, web3EnableError,user,logout,isLoggingOut } = useMoralis()
 
   return (
     <Box>
@@ -87,7 +89,6 @@ export default function WithSubnavigation() {
             DAM Finance
             </ReachLink>
           </Text>
-          <Text color="white" ml={1}>{user ? user.get("username"):"No User"}</Text>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
           </Flex>
@@ -114,51 +115,14 @@ export default function WithSubnavigation() {
           </Button>
           <ModelBox isOpen={isOpen} onClose={onClose} />
           {/* Setting Button */}
-          <Menu>
-            <MenuButton
-              onClick={onOpen}
-              onClose={onClose}
-              as={IconButton}
-              aria-label="settings"
-              icon={<SettingsIcon />}
-              variant="outline"
-              color="whiteAlpha.900"
-              backgroundColor="blackAlpha.800"
-              _hover={{
-                color: "blackAlpha.800",
-                backgroundColor: "whiteAlpha.900",
-              }}
-            />
-            <MenuList>
-              <MenuItem icon={<HiOutlineCurrencyDollar />}>
-                Choose Currency
-              </MenuItem>
-            </MenuList>
-          </Menu>
-
+          <Stack>
+          <Avatar bg="purple.100" size="xs" >
+            <AvatarBadge boxSize="1.25em" bg={user ? "green.500" : "red.500"} />
+          </Avatar>
+          <Text fontSize="xs" color="gray.500">{user ? user.get("ethAddress"):"No Connected"}</Text>
+          </Stack>
           {/* Menu Button */}
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label="settings"
-              icon={<HiDotsHorizontal />}
-              variant="outline"
-              color="whiteAlpha.900"
-              backgroundColor="blackAlpha.800"
-              _hover={{
-                color: "blackAlpha.800",
-                backgroundColor: "whiteAlpha.900",
-              }}
-            />
-            <MenuList>
-              <MenuItem icon={<AiOutlineHome />}>Protocol</MenuItem>
-              <MenuItem icon={<AiFillQuestionCircle />}>FAQ</MenuItem>
-              <MenuItem icon={<AiOutlineBulb />}>Feedback</MenuItem>
-              <MenuItem icon={<HiCode />}>Developer</MenuItem>
-              <MenuItem icon={<AiOutlineBug />}>Bug Report</MenuItem>
-              <MenuItem icon={<HiOutlineLibrary />}>Governance</MenuItem>
-            </MenuList>
-          </Menu>
+         <Button isLoading={isLoggingOut} onClick={() => logout} colorScheme="purple">Logout</Button>
         </Stack>
       </Flex>
 
