@@ -71,6 +71,7 @@ const ModelBox = (props) => {
               <Flex direction="column" align="center" justify="center">
                 <Image src={MetaMaskSVG} alt="Metamask Icon" width="100px" />
                 <Button
+                marginTop='4'
                   size="lg"
                   display={{ base: 'none', md: 'inline-flex' }}
                   fontSize={'sm'}
@@ -91,13 +92,13 @@ const ModelBox = (props) => {
                 direction="column"
                 align="center"
                 justify="center"
-                marginTop="-40"
+                marginTop="20"
               >
                 <Image src={PortisSVG} alt="Portis Icon" width="80px" />
                 <Button
                   size="lg"
                   display={{ base: 'none', md: 'inline-flex' }}
-                  marginTop="-40"
+                  marginTop="4"
                   fontSize="sm"
                   fontWeight={600}
                   color="white"
@@ -110,7 +111,12 @@ const ModelBox = (props) => {
                 >
                   Connect Portis
                 </Button>
-                <Button onClick={() => logout()}>Logout</Button>
+                <Button
+                color="white"
+                bgColor='red.600'
+                _hover={{bgColor: 'red.700'}}
+                marginTop='6' 
+                onClick={() => logout()}>Logout</Button>
               </Flex>
             </Flex>
           </ModalBody>
