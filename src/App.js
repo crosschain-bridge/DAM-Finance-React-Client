@@ -8,7 +8,7 @@ import Valve from './pages/Valve';
 import Home from './pages/Home';
 import Protocol from './pages/Protocol';
 import CreatePools from './pages/CreatePools';
-
+import User from './pages/User';
 function App() {
   const { user, enableWeb3, isWeb3Enabled } = useMoralis();
 
@@ -39,6 +39,9 @@ function App() {
         </Route>
         <Route exact path="/">
           <Home />
+        </Route>
+        <Route exact path="/user">
+          <User />
         </Route>
       </Switch>
     </Box>
