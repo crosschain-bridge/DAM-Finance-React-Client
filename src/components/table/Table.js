@@ -143,37 +143,3 @@ export default function DAMTable() {
   );
 }
 
-// export default function Table() {
-//   const tableInstance = useTable({ columns, data });
-//   return (
-//     <Table variant="simple" bg="blue.900">
-//       <Thead>
-//         <Tr>
-//           <Th>NAME</Th>
-//           <Th>TOP ASSETS</Th>
-//           <TH>SINCE INCEPTION</TH>
-//           <Th>THIS MONTH</Th>
-//           <Th>24H</Th>
-//           <Th>LAST 7</Th>
-//         </Tr>
-//       </Thead>
-//       <Tbody>
-//         <Tr>
-//           <Td>inches</Td>
-//           <Td>millimetres (mm)</Td>
-//           <Td isNumeric>25.4</Td>
-//         </Tr>
-//         <Tr>
-//           <Td>feet</Td>
-//           <Td>centimetres (cm)</Td>
-//           <Td isNumeric>30.48</Td>
-//         </Tr>
-//         <Tr>
-//           <Td>yards</Td>
-//           <Td>metres (m)</Td>
-//           <Td isNumeric>0.91444</Td>
-//         </Tr>
-//       </Tbody>
-//     </Table>
-//   );
-// }

@@ -9,6 +9,7 @@ import {
   InputGroup,
   InputRightElement,
   Select,
+  Image
 } from "@chakra-ui/react";
 import ComptrollerFactory from "../abis/ComptrollerFactory.json"
 import DAMPoolFactory from "../abis/DAMPoolFactory.json"
@@ -16,6 +17,8 @@ import { useMoralis } from "react-moralis";
 import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import assets from "../denominationAsset.json"
 import { useState, useEffect } from "react";
+import  DampLogo  from '../assets/damp.svg';
+
 export default function CreatePools() {
   const { web3 } = useMoralis();
   const [ data, setData ] = useState({
@@ -33,6 +36,7 @@ export default function CreatePools() {
   };
   return (
     <Box p={20}>
+    <Image src={DampLogo} height={14} bgColor="purple.700" px={2} py={1} mb={6} borderRadius='sm' />
       <Stack spacing={3}>
         <FormControl>
           <FormLabel>Manager</FormLabel>
@@ -71,7 +75,7 @@ export default function CreatePools() {
               )
           })}
         </Select>
-        <Button variant="outline" onClick={handleSubmit}>Submit</Button>
+        <Button bgColor='green.400' color='whitesmoke' _hover={{bgColor: "green.600"}} variant="outline" onClick={handleSubmit}>Submit</Button>
       </Stack>
     </Box>
   );

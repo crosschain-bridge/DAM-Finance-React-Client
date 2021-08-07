@@ -84,7 +84,7 @@ export default function Home() {
           </Text>
           <Button onClick={getBalances}>Get Balance</Button>
           <Button onClick={getTransaction}>Get Transaction</Button>
-          <Button onClick={initSuperfluid}>SuperFuild</Button>
+          <Button onClick={initSuperfluid}>SuperFluid</Button>
           <Button
             display={{ base: "none", md: "inline-flex" }}
             fontSize={"sm"}

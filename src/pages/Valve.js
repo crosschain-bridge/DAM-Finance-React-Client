@@ -11,6 +11,8 @@ import {
   Select,
   ButtonGroup,
   Wrap,
+  WrapItem,
+  Center,
 } from "@chakra-ui/react";
 import NavBar from "../components/NavBar/index";
 import Graph from "../components/Graph/index";
@@ -58,12 +60,12 @@ const Valve = () => {
               bgGradient: "linear(to-l, cyan.500, blue.400)",
             }}
           >
-            Deposite
+            Deposit
           </Button>
         </Flex>
         <Box m="50px 0 0 30px">
           <Text fontSize="sm" color="gray.500">
-            Share Price
+            Total Asset
           </Text>
         </Box>
 
@@ -85,30 +87,8 @@ const Valve = () => {
           <Select variant="outline" placeholder="Share price" w="250px">
             <option>Assets under management</option>
           </Select>
-
-          <ButtonGroup ml={6} p={1} spacing="-0.4">
-            <Button rounded="10px 0 0 10px" border="1px" borderColor="gray.600">
-              1D
-            </Button>
-            <Button rounded="none" border="1px" borderColor="gray.600">
-              1W
-            </Button>
-            <Button rounded="none" border="1px" borderColor="gray.600">
-              1M
-            </Button>
-            <Button rounded="none" border="1px" borderColor="gray.600">
-              3M
-            </Button>
-            <Button rounded="none" border="1px" borderColor="gray.600">
-              6M
-            </Button>
-            <Button rounded="0 10px 10px 0" border="1px" borderColor="gray.600">
-              1Y
-            </Button>
-          </ButtonGroup>
         </Flex>
 
-        <Graph />
 
         {/* Cards */}
         <Wrap
@@ -116,6 +96,7 @@ const Valve = () => {
           align="center"
           m="60px 10px 10px 60px"
           h="auto"
+          color='whitesmoke'
         >
           <WrapCard />
           <WrapCard />

@@ -16,7 +16,8 @@ import {
   useDisclosure,
   Avatar,
   AvatarBadge,
-  Tooltip
+  Tooltip,
+  Image
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -38,12 +39,15 @@ import {
 import { useMoralis } from "react-moralis";
 import { Link as ReachLink } from "react-router-dom";
 import { useClipboard } from "@chakra-ui/react";
+import { FaEthereum } from 'react-icons/fa';
 import EthIcon from "../../assets/EthIcon";
 import { ReactComponent as EIcon } from "../../assets/eth.svg";
-
+import  DampLogo  from '../../assets/damp.svg';
+import Identicon from 'react-identicons';
 // Components
 import MobileNav from "./MobileNav";
 import ModelBox from "./ModelBox";
+import { reduceHooks } from "react-table";
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle, onOpen, onClose } = useDisclosure();
@@ -65,7 +69,7 @@ export default function WithSubnavigation() {
   return (
     <Box>
       <Flex
-        bg={useColorModeValue("purple.700", "blue.500")}
+        bg={useColorModeValue("purple.900", "blue.500")}
         color={useColorModeValue("gray.600", "white")}
         minH={"60px"}
         py={{ base: 2 }}
@@ -96,9 +100,9 @@ export default function WithSubnavigation() {
             color={useColorModeValue("white", "white")}
             fontWeight={800}
           >
-            <ReachLink to="/">DAM Finance</ReachLink>
+            <ReachLink to="/"><Image src={DampLogo} height={10} /></ReachLink>
           </Text>
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
+          <Flex display={{ base: "none", md: "flex" }} align='center' ml={10}>
             <DesktopNav />
           </Flex>
         </Flex>
@@ -110,18 +114,18 @@ export default function WithSubnavigation() {
           spacing={6}
         >
           <Flex align="center" justify="center">
-            <Avatar bg="purple.100" size="md" mr={2}>
-              <AvatarBadge
-                boxSize="1.25em"
-                bg={user ? "green.500" : "red.500"}
-              />
-            </Avatar>
+          <Box p={2}>
+            <Identicon mr={2} size={40} string={user ? user.get("ethAddress") : "No Address Found"}  />
+          </Box>
             <Tooltip hasArrow label="Click to Copy address" colorScheme="messenger">
             <Button
-              ml={2}
-              onClick={onCopy}
-              colorScheme="linkedin"
-              variant="outline"
+            leftIcon={<FaEthereum/>}
+            mr={2}
+            ml={2}
+            onClick={onCopy}
+            color='black'
+            bgColor="whitesmoke"
+            variant="solid"
             >
             {hasCopied ? "Copied" : "Ethereum Address"}
             </Button>
@@ -129,11 +133,12 @@ export default function WithSubnavigation() {
           {/* Logout */}
           <Button
                 disabled={isAuthenticating}
-                colorScheme="whiteAlpha"
-                variant="ghost"
+                colorScheme='red'
+                variant='outline'
                 mx={2}
                 onClick={() => logout()}>Logout</Button>
           <Button
+          ml={2}
             onClick={onOpen}
             fontSize={"sm"}
             fontWeight={600}
@@ -171,10 +176,10 @@ const DesktopNav = () => {
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Link
-                p={2}
+              
                 as={ReachLink}
                 to={navItem.href}
-                fontSize={"sm"}
+                fontSize={"md"}
                 fontWeight={500}
                 color={linkColor}
                 _hover={{
