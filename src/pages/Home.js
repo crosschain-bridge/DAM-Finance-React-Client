@@ -8,32 +8,13 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useColorMode,
   useDisclosure,
-  Stack,
-  Input,
-  SlideFade,
-} from "@chakra-ui/react";
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-} from "@chakra-ui/react";
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-} from "@chakra-ui/react";
-import { useMoralis } from "react-moralis";
-import NavBar from "../components/NavBar";
-import DAMTable from "../components/table/Table";
-import {initSuperfluid,createBatchCall,flow} from "../superfluid"
-import {Link as RouterLink} from "react-router-dom"
+} from '@chakra-ui/react';
+import { useMoralis } from 'react-moralis';
+import NavBar from '../components/NavBar';
+import DAMTable from '../components/table/Table';
+import { initSuperfluid, createFlow, modifyFlow } from '../superfluid';
+import { Link as RouterLink } from 'react-router-dom';
 
 export default function Home() {
   const { Moralis, user, isAuthenticated } = useMoralis();
@@ -41,22 +22,22 @@ export default function Home() {
 
   const getBalances = async () => {
     const options = {
-      chain: "mumbai",
-      address: user.get("ethAddress"),
+      chain: 'mumbai',
+      address: user.get('ethAddress'),
     };
     const balances = await Moralis.Web3.getAllERC20(options);
     let b = balances[0].balance / 10 ** 18;
-    console.log("BALANCES", balances);
+    console.log('BALANCES', balances);
   };
 
   const getTransaction = async () => {
     const options = {
-      chain: "mumbai",
-      address: user.get("ethAddress"),
-      order: "desc",
+      chain: 'mumbai',
+      address: user.get('ethAddress'),
+      order: 'desc',
     };
     const transactions = await Moralis.Web3.getTransactions(options);
-    console.log("Transactions", transactions);
+    console.log('Transactions', transactions);
   };
 
   return (
@@ -70,8 +51,8 @@ export default function Home() {
           dir="row"
           justifyContent="space-between"
           sx={{
-            "@media (max-width: 415px)": {
-              flexDirection: "column",
+            '@media (max-width: 415px)': {
+              flexDirection: 'column',
             },
           }}
         >
@@ -82,16 +63,34 @@ export default function Home() {
           <Button onClick={getTransaction}>Get Transaction</Button>
           <Button onClick={initSuperfluid}>SuperFuild</Button>
           <Button
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
+            onClick={() => {
+              /* create flow */
+              // createFlow(
+              //   200,
+              //   100,
+              //   '0x3f84205744D06370Aa0dbE704f59CBE36FF7b2Bb',
+              //   user.get('ethAddress')
+              // );
+              /* modify flow */
+              // modifyFlow(
+              //   user.get('ethAddress'),
+              //   '0x3f84205744D06370Aa0dbE704f59CBE36FF7b2Bb',
+              //   0
+              // );
+            }}
+          >
+            Create Flow
+          </Button>
+          <Button
+            display={{ base: 'none', md: 'inline-flex' }}
+            fontSize={'sm'}
             fontWeight={600}
-            color={"white"}
+            color={'white'}
             as={RouterLink}
-            to='/createpools'
+            to="/createpools"
             bgGradient="linear(to-r, cyan.400, blue.500)"
-            
             _hover={{
-              bgGradient: "linear(to-l, cyan.500, blue.400)",
+              bgGradient: 'linear(to-l, cyan.500, blue.400)',
             }}
           >
             Deposites

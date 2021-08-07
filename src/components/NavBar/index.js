@@ -16,139 +16,126 @@ import {
   useDisclosure,
   Avatar,
   AvatarBadge,
-  Tooltip
-} from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronRightIcon,
-} from "@chakra-ui/icons";
+  Tooltip,
+} from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import {
   HiDotsHorizontal,
   HiOutlineCurrencyDollar,
   HiCode,
   HiOutlineLibrary,
-} from "react-icons/hi";
-import {
-  AiOutlineHome,
-  AiFillQuestionCircle,
-  AiOutlineBug,
-  AiOutlineBulb,
-} from "react-icons/ai";
-import { useState,useEffect } from "react";
-import { useMoralis } from "react-moralis";
-import { Link as ReachLink } from "react-router-dom";
-import { useClipboard } from "@chakra-ui/react";
-import EthIcon from "../../assets/EthIcon";
-import { ReactComponent as EIcon } from "../../assets/eth.svg";
+} from 'react-icons/hi';
+import { useState, useEffect } from 'react';
+import { useMoralis } from 'react-moralis';
+import { Link as ReachLink } from 'react-router-dom';
+import { useClipboard } from '@chakra-ui/react';
+import EthIcon from '../../assets/EthIcon';
+import { ReactComponent as EIcon } from '../../assets/eth.svg';
 
 // Components
-import MobileNav from "./MobileNav";
-import ModelBox from "./ModelBox";
+import MobileNav from './MobileNav';
+import ModelBox from './ModelBox';
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle, onOpen, onClose } = useDisclosure();
-  const {
-    web3,
-    enableWeb3,
-    isWeb3Enabled,
-    isWeb3EnableLoading,
-    web3EnableError,
-    user,
-    isAuthenticating,
-    logout,
-    isLoggingOut,
-  } = useMoralis();
+  const { user, isAuthenticating, logout } = useMoralis();
 
-  const address = user ? user.get("ethAddress") : "No Address Found";
+  const address = user ? user.get('ethAddress') : 'No Address Found';
   const { hasCopied, onCopy } = useClipboard(address);
 
   return (
     <Box>
       <Flex
-        bg={useColorModeValue("purple.700", "blue.500")}
-        color={useColorModeValue("gray.600", "white")}
-        minH={"60px"}
+        bg={useColorModeValue('purple.700', 'blue.500')}
+        color={useColorModeValue('gray.600', 'white')}
+        minH={'60px'}
         py={{ base: 2 }}
         px={{ base: 4 }}
         borderBottom={1}
-        borderStyle={"solid"}
-        borderColor={useColorModeValue("gray.200", "gray.900")}
-        align={"center"}
+        borderStyle={'solid'}
+        borderColor={useColorModeValue('gray.200', 'gray.900')}
+        align={'center'}
       >
         <Flex
-          flex={{ base: 1, md: "auto" }}
+          flex={{ base: 1, md: 'auto' }}
           ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
+          display={{ base: 'flex', md: 'none' }}
         >
           <IconButton
             onClick={onToggle}
             icon={
               isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
             }
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
+            variant={'ghost'}
+            aria-label={'Toggle Navigation'}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+        <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            color={useColorModeValue("white", "white")}
+            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
+            fontFamily={'heading'}
+            color={useColorModeValue('white', 'white')}
             fontWeight={800}
           >
             <ReachLink to="/">DAM Finance</ReachLink>
           </Text>
-          <Flex display={{ base: "none", md: "flex" }} ml={10}>
+          <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
           </Flex>
         </Flex>
 
         <Stack
           flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
+          justify={'flex-end'}
+          direction={'row'}
           spacing={6}
         >
           <Flex align="center" justify="center">
             <Avatar bg="purple.100" size="md" mr={2}>
               <AvatarBadge
                 boxSize="1.25em"
-                bg={user ? "green.500" : "red.500"}
+                bg={user ? 'green.500' : 'red.500'}
               />
             </Avatar>
-            <Tooltip hasArrow label="Click to Copy address" colorScheme="messenger">
-            <Button
-              ml={2}
-              onClick={onCopy}
-              colorScheme="linkedin"
-              variant="outline"
+            <Tooltip
+              hasArrow
+              label="Click to Copy address"
+              colorScheme="messenger"
             >
-            {hasCopied ? "Copied" : "Ethereum Address"}
-            </Button>
+              <Button
+                ml={2}
+                onClick={onCopy}
+                colorScheme="linkedin"
+                variant="outline"
+              >
+                {hasCopied ? 'Copied' : 'Ethereum Address'}
+              </Button>
             </Tooltip>
-          {/* Logout */}
-          <Button
-                disabled={isAuthenticating}
-                colorScheme="whiteAlpha"
-                variant="ghost"
-                mx={2}
-                onClick={() => logout()}>Logout</Button>
-          <Button
-            onClick={onOpen}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bgGradient="linear(to-r, purple.500, pink.500)"
-            href={"#"}
-            _hover={{
-              bgGradient: "linear(to-l, purple.500, pink.700)",
-            }}
-          >
-            Connect Wallet
-          </Button>
+            {/* Logout */}
+            <Button
+              disabled={isAuthenticating}
+              colorScheme="whiteAlpha"
+              variant="ghost"
+              mx={2}
+              onClick={() => logout()}
+            >
+              Logout
+            </Button>
+            <Button
+              onClick={onOpen}
+              fontSize={'sm'}
+              fontWeight={600}
+              color={'white'}
+              bgGradient="linear(to-r, purple.500, pink.500)"
+              href={'#'}
+              _hover={{
+                bgGradient: 'linear(to-l, purple.500, pink.700)',
+              }}
+            >
+              Connect Wallet
+            </Button>
           </Flex>
-        
+
           <ModelBox isOpen={isOpen} onClose={onClose} />
         </Stack>
       </Flex>
@@ -161,25 +148,25 @@ export default function WithSubnavigation() {
 }
 
 const DesktopNav = () => {
-  const linkColor = useColorModeValue("gray.300", "gray.200");
-  const linkHoverColor = useColorModeValue("white", "white");
-  const popoverContentBgColor = useColorModeValue("white", "gray.800");
+  const linkColor = useColorModeValue('gray.300', 'gray.200');
+  const linkHoverColor = useColorModeValue('white', 'white');
+  const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
   return (
-    <Stack direction={"row"} spacing={4}>
+    <Stack direction={'row'} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label}>
-          <Popover trigger={"hover"} placement={"bottom-start"}>
+          <Popover trigger={'hover'} placement={'bottom-start'}>
             <PopoverTrigger>
               <Link
                 p={2}
                 as={ReachLink}
                 to={navItem.href}
-                fontSize={"sm"}
+                fontSize={'sm'}
                 fontWeight={500}
                 color={linkColor}
                 _hover={{
-                  textDecoration: "none",
+                  textDecoration: 'none',
                   color: linkHoverColor,
                 }}
               >
@@ -190,11 +177,11 @@ const DesktopNav = () => {
             {navItem.children && (
               <PopoverContent
                 border={0}
-                boxShadow={"xl"}
+                boxShadow={'xl'}
                 bg={popoverContentBgColor}
                 p={4}
-                rounded={"xl"}
-                minW={"sm"}
+                rounded={'xl'}
+                minW={'sm'}
               >
                 <Stack>
                   {navItem.children.map((child) => (
@@ -215,33 +202,33 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
     <Link
       as={ReachLink}
       to={href}
-      role={"group"}
-      display={"block"}
+      role={'group'}
+      display={'block'}
       p={2}
-      rounded={"md"}
-      _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
+      rounded={'md'}
+      _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}
     >
-      <Stack direction={"row"} align={"center"}>
+      <Stack direction={'row'} align={'center'}>
         <Box>
           <Text
-            transition={"all .3s ease"}
-            _groupHover={{ color: "pink.400" }}
+            transition={'all .3s ease'}
+            _groupHover={{ color: 'pink.400' }}
             fontWeight={500}
           >
             {label}
           </Text>
-          <Text fontSize={"sm"}>{subLabel}</Text>
+          <Text fontSize={'sm'}>{subLabel}</Text>
         </Box>
         <Flex
-          transition={"all .3s ease"}
-          transform={"translateX(-10px)"}
+          transition={'all .3s ease'}
+          transform={'translateX(-10px)'}
           opacity={0}
-          _groupHover={{ opacity: "100%", transform: "translateX(0)" }}
-          justify={"flex-end"}
-          align={"center"}
+          _groupHover={{ opacity: '100%', transform: 'translateX(0)' }}
+          justify={'flex-end'}
+          align={'center'}
           flex={1}
         >
-          <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Link>
@@ -250,16 +237,16 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
 
 const NAV_ITEMS = [
   {
-    label: "Home",
-    href: "/",
+    label: 'Home',
+    href: '/',
   },
   {
-    label: "Valve",
-    href: "/valve",
+    label: 'Valve',
+    href: '/valve',
   },
   {
-    label: "Profile",
-    href: "/profile",
+    label: 'Profile',
+    href: '/profile',
   },
 
   //   {

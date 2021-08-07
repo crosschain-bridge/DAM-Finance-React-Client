@@ -1,65 +1,48 @@
-import {useEffect} from "react"
-import {Box,Heading} from "@chakra-ui/react"
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-import { useMoralis } from "react-moralis";
-import {initSuperfluid} from './superfluid'
-import Profile from "./pages/Profile"
-import Valve from "./pages/Valve"
-import Home from "./pages/Home"
-import Protocol from "./pages/Protocol";
-import ErrorPage from "./pages/ErrorPage"
-import CreatePools from "./pages/CreatePools";
+import { useEffect } from 'react';
+import { Box } from '@chakra-ui/react';
+import { Switch, Route } from 'react-router-dom';
+import { useMoralis } from 'react-moralis';
+import { initSuperfluid } from './superfluid';
+import Profile from './pages/Profile';
+import Valve from './pages/Valve';
+import Home from './pages/Home';
+import Protocol from './pages/Protocol';
+import CreatePools from './pages/CreatePools';
 
 function App() {
-
-  const {
-    user,
-    authenticate,
-    isAuthenticated,
-    isAuthenticating,
-    Moralis,
-    web3,
-    enableWeb3,
-    logout,
-  } = useMoralis();
-
-  useEffect( () => {
-    if (user){
-      enableWeb3()
-    }  
-  },[user])
+  const { user, enableWeb3, isWeb3Enabled } = useMoralis();
 
   useEffect(() => {
-    if (user && web3)
-      initSuperfluid()
-  },[user, web3])
+    if (user && !isWeb3Enabled) {
+      enableWeb3();
+    }
+  }, [user, enableWeb3, isWeb3Enabled]);
+
+  useEffect(() => {
+    if (user && isWeb3Enabled) initSuperfluid();
+  }, [user, isWeb3Enabled]);
 
   return (
     <Box>
-        <Switch>
-         <Route path="/createpools">
-            <CreatePools />
-          </Route>
+      <Switch>
+        <Route path="/createpools">
+          <CreatePools />
+        </Route>
         <Route exact path="/profile">
-            <Profile />
-          </Route>
-          <Route exact path="/valve">
-            <Valve />
-          </Route>
-          <Route exact path="/protocol">
-            <Protocol />
-          </Route>
-          <Route exact path="/">
-            <Home />
-          </Route>
-    </Switch>
+          <Profile />
+        </Route>
+        <Route exact path="/valve">
+          <Valve />
+        </Route>
+        <Route exact path="/protocol">
+          <Protocol />
+        </Route>
+        <Route exact path="/">
+          <Home />
+        </Route>
+      </Switch>
     </Box>
-  )
+  );
 }
 
 export default App;
