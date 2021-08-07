@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 
 // importing components
 import {
@@ -23,6 +23,8 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 import NavBar from "../components/NavBar/index";
+import {createFlow} from "../superfluid"
+import { useMoralis } from "react-moralis";
 // import Graph from "../components/Graph/index";
 import WrapCard from "../components/WrapCard";
 import { VscCloudDownload } from "react-icons/vsc";
@@ -36,7 +38,17 @@ const Valve = () => {
     })
     console.log(data);
   }
+
+  const {user} = useMoralis();
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const [flowAmount,setFlowAmount] = useState("");
+
+  const handleDeposit = () => {
+    console.log("Clicked");
+    console.log(user.get("ethAddress"));
+    createFlow(500,flowAmount,"0x4C470baC1172B5E20690ce65E1146AfE94Ff1053",user.get("ethAddress") )
+  }
   useEffect(() => {
     getData();
   },[])
@@ -76,13 +88,13 @@ const Valve = () => {
           <ModalHeader>Flow Tokens</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input placeholder="Flow Amount" />
+            <Input placeholder="Flow Amount" value={flowAmount} onChange={(e) =>setFlowAmount(e.target.value)} />
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost">Create Flow</Button>
+            <Button variant="ghost" onClick={handleDeposit}>Create Flow</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
