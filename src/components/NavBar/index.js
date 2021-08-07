@@ -14,8 +14,6 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
-  Avatar,
-  AvatarBadge,
   Tooltip,
   Image
 } from "@chakra-ui/react";
@@ -265,28 +263,4 @@ const NAV_ITEMS = [
     label: "Profile",
     href: "/profile",
   },
-
-  //   {
-  //     label: "Find Work",
-  //     children: [
-  //       {
-  //         label: "Job Board",
-  //         subLabel: "Find your dream design job",
-  //         href: "#",
-  //       },
-  //       {
-  //         label: "Freelance Projects",
-  //         subLabel: "An exclusive list for contract work",
-  //         href: "#",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     label: "Learn Design",
-  //     href: "#",
-  //   },
-  //   {
-  //     label: "Hire Designers",
-  //     href: "#",
-  //   },
 ];

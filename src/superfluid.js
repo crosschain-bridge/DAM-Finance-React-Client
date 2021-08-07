@@ -1,56 +1,54 @@
-import SuperfluidSDK from "@superfluid-finance/js-sdk";
-import { 
-//    getTimeStamp, 
-//    getDate, 
-    convertTo, 
-//    convertFrom 
-} from "./utils";
-import mWeb3 from "./mWeb3";
+import SuperfluidSDK from '@superfluid-finance/js-sdk';
+// import { web3tx, toWad, toBN } from "@decentral.ee/web3-helpers");
+import aaveDAIDetails from './denominationAsset.json';
+import { convertTo } from './utils';
+import mWeb3 from './mWeb3';
 
-// const Web3 = require("web3");
-// const web3 = Moralis.Web3.enable()
-const mweb3 = mWeb3();
+import ERC20ABI from './abis/ERC20.json';
 
+// const mweb3 = mWeb3();
 
-// let web3; // Get this from Moralis
-let aaveDAIx; // Ideally we can get this from a token list of sorts
-let sf;
+let aaveDAIx;
 
-const toBN = (number) => mweb3.utils.toBN(number);
+let web3 = null;
+mWeb3()
+  .then((w) => {
+    web3 = w;
+  })
+  .catch((err) => console.log(err));
+
+export let sf;
+
+const toBN = (number) => web3.utils.toBN(number);
 
 // To be called first after moralis is initialized
 export async function initSuperfluid() {
-
-  const web3 = await mweb3;
-  console.log("ACCOUNTS",await web3.eth.getAccounts());
-  // const {Moralis} = useMoralis();
-  // let web3 =await Moralis.Web3.enable();
-  // web3 = new Web3(window.ethereum);
-
   sf = new SuperfluidSDK.Framework({
     web3,
-    version: "v1",
-    tokens: ["aaveDAIx"]
+    version: 'v1',
+    tokens: ['aaveDAIx'],
   });
 
   await sf.initialize();
 
   aaveDAIx = sf.tokens.aaveDAIx;
-  console.log(aaveDAIx);
+  console.log(aaveDAIx.address);
 
   // await sf.host.batchCall(createBatchCall());
 }
 
 // To run this function, initSuperfluid() must be called first
-// This function can be used to create, modify and terminate a flow
-export async function flow(account, recipient, flowrate, token) {
+// This function can be used to modify and terminate a flow
+export async function modifyFlow(userAddr, comptrollerAddr, amount) {
+  const flowrate = calcFlowRate(amount);
+
   const user = await sf.user({
-    address: account,
-    token: token,
+    address: userAddr,
+    token: aaveDAIx.address,
   });
 
   await user.flow({
-    recipient: recipient,
+    recipient: comptrollerAddr,
     flowRate: flowrate,
   });
 
@@ -62,37 +60,64 @@ export async function flow(account, recipient, flowrate, token) {
 
 // This function is used to updgrade aaveDAI to aaveDAIx
 // and create a constant flow to a comptroller all in one transaction
-export function createBatchCall(
-  upgradeAmount = 0,
-  depositAmount = 0,
-  comptrollerAddr
+export async function createFlow(
+  upgradeAmount,
+  depositAmount,
+  comptrollerAddr,
+  userAddr
 ) {
-  console.log("Beginning batch call...");
-  
+  console.log('Beginning batch call...');
+
+  const upgradeAmountString = convertTo(upgradeAmount, 18);
+  const depositAmountString = toBN(convertTo(depositAmount, 18))
+    .div(toBN(3600 * 24 * 30))
+    .toString();
+
+  const aaveDAIContract = new web3.eth.Contract(
+    ERC20ABI,
+    aaveDAIDetails[0].address
+  );
+
+  await aaveDAIContract.methods
+    .approve(aaveDAIx.address, '1' + '0'.repeat(42))
+    .send({ from: userAddr });
+
+  await sf.host.batchCall(
+    createBatchCall(upgradeAmountString, depositAmountString, comptrollerAddr),
+    { from: userAddr }
+  );
+}
+
+function createBatchCall(upgradeAmount, depositAmount, comptrollerAddr) {
   return [
     [
       101, // upgrade 'upgradeAmount' aaveDAIx to start a flow to a comptroller
       aaveDAIx.address,
-      mweb3.eth.abi.encodeParameters(["uint256"], [convertTo(upgradeAmount, 18)]),
+      web3.eth.abi.encodeParameters(['uint256'], [upgradeAmount]),
     ],
     [
       201, // create constant flow to comptroller
       sf.agreements.cfa.address,
-      mweb3.eth.abi.encodeParameters(
-        ["bytes", "bytes"],
+      web3.eth.abi.encodeParameters(
+        ['bytes', 'bytes'],
         [
           sf.agreements.cfa.contract.methods
             .createFlow(
               aaveDAIx.address,
               // change this to the address of chinmay
               comptrollerAddr, // change it to app.address
-              convertTo(depositAmount, 18).div(toBN(3600 * 24 * 30)),
-              "0x"
+              depositAmount,
+              '0x'
             )
             .encodeABI(), // callData
-          "0x", // userData
+          '0x', // userData
         ]
       ),
     ],
   ];
 }
+
+const calcFlowRate = (amount) =>
+  toBN(convertTo(amount, 18))
+    .div(toBN(3600 * 24 * 30))
+    .toString();
