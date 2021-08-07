@@ -5,7 +5,7 @@ import { Avatar, Box, HStack, Text, VStack, WrapItem } from "@chakra-ui/react";
 const Card = () => {
   return (
     <WrapItem>
-      <Box bg="gray.700" w="350px" p={4} rounded="lg">
+      <Box bg="purple.700" w="350px" p={4} rounded="lg">
         <HStack direction="row" align="center" justify="flex-start">
           <Avatar mr={3}></Avatar>
           <VStack align="flex-start" spacing="0.5">

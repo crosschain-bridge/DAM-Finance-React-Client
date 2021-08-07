@@ -9,15 +9,17 @@ import {
   InputGroup,
   InputRightElement,
   Select,
-} from '@chakra-ui/react';
-import { sf } from '../superfluid';
-import { useState } from 'react';
-import { useMoralis } from 'react-moralis';
-import { AddIcon, ChevronDownIcon } from '@chakra-ui/icons';
-import assets from '../denominationAsset.json';
-import DAMPoolFactory from '../abis/DAMPoolFactory.json';
-import ComptrollerFactory from '../abis/ComptrollerFactory.json';
+  Image
+} from "@chakra-ui/react";
+import ComptrollerFactory from "../abis/ComptrollerFactory.json"
 import ComptrollerV2 from '../abis/ComptrollerV2.json';
+import DAMPoolFactory from "../abis/DAMPoolFactory.json"
+import { useMoralis } from "react-moralis";
+import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import assets from "../denominationAsset.json"
+import { useState } from "react";
+import  DampLogo  from '../assets/damp.svg';
+import { sf } from '../superfluid';
 
 export default function CreatePools() {
   const { web3, user } = useMoralis();
@@ -91,6 +93,7 @@ export default function CreatePools() {
 
   return (
     <Box p={20}>
+    <Image src={DampLogo} height={14} bgColor="purple.700" px={2} py={1} mb={6} borderRadius='sm' />
       <Stack spacing={3}>
         <FormControl>
           <FormLabel>Manager</FormLabel>
@@ -131,9 +134,7 @@ export default function CreatePools() {
             );
           })}
         </Select>
-        <Button variant="outline" onClick={handleSubmit}>
-          Submit
-        </Button>
+        <Button bgColor='green.400' color='whitesmoke' _hover={{bgColor: "green.600"}} variant="outline" onClick={handleSubmit}>Submit</Button>
       </Stack>
     </Box>
   );
