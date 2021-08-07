@@ -85,6 +85,7 @@ export default function WithSubnavigation() {
         >
           <Flex align="center" justify="center">
             {isAuthenticated && (
+              <Link as={ReachLink} to='/user'>
               <Box p={2}>
                 <Identicon
                   mr={2}
@@ -92,6 +93,7 @@ export default function WithSubnavigation() {
                   string={user ? user.get("ethAddress") : "No Address Found"}
                 />
               </Box>
+              </Link>
             )}
 
             {isAuthenticated && (
