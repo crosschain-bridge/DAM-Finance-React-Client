@@ -49,7 +49,7 @@ export default function Profile() {
         w={["100%", "100%", "10%", "15%", "15%"]}
         flexDir="column"
         alignItems="center"
-        backgroundColor="purple.700"
+        backgroundColor="purple.800"
         color="#fff"
       >
         <Flex

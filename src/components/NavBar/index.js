@@ -15,52 +15,22 @@ import {
   useBreakpointValue,
   useDisclosure,
   Tooltip,
-  Image
+  Image,
 } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronRightIcon,
-} from "@chakra-ui/icons";
-import {
-  HiDotsHorizontal,
-  HiOutlineCurrencyDollar,
-  HiCode,
-  HiOutlineLibrary,
-} from "react-icons/hi";
-import {
-  AiOutlineHome,
-  AiFillQuestionCircle,
-  AiOutlineBug,
-  AiOutlineBulb,
-} from "react-icons/ai";
+import { HamburgerIcon, CloseIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { useMoralis } from "react-moralis";
 import { Link as ReachLink } from "react-router-dom";
 import { useClipboard } from "@chakra-ui/react";
-import { FaEthereum } from 'react-icons/fa';
-import EthIcon from "../../assets/EthIcon";
-import { ReactComponent as EIcon } from "../../assets/eth.svg";
-import  DampLogo  from '../../assets/damp.svg';
-import Identicon from 'react-identicons';
+import { FaEthereum } from "react-icons/fa";
+import DampLogo from "../../assets/damp.svg";
+import Identicon from "react-identicons";
 // Components
 import MobileNav from "./MobileNav";
 import ModelBox from "./ModelBox";
-import { reduceHooks } from "react-table";
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle, onOpen, onClose } = useDisclosure();
-  const {
-    web3,
-    enableWeb3,
-    isWeb3Enabled,
-    isWeb3EnableLoading,
-    web3EnableError,
-    user,
-    isAuthenticating,
-    logout,
-    isLoggingOut,
-  } = useMoralis();
-  console.log(user);
+  const { user, isAuthenticating, isAuthenticated, logout } = useMoralis();
   const address = user ? user.get("ethAddress") : "No Address Found";
   const { hasCopied, onCopy } = useClipboard(address);
 
@@ -98,9 +68,11 @@ export default function WithSubnavigation() {
             color={useColorModeValue("white", "white")}
             fontWeight={800}
           >
-            <ReachLink to="/"><Image src={DampLogo} height={10} /></ReachLink>
+            <ReachLink to="/">
+              <Image src={DampLogo} height={10} />
+            </ReachLink>
           </Text>
-          <Flex display={{ base: "none", md: "flex" }} align='center' ml={10}>
+          <Flex display={{ base: "none", md: "flex" }} align="center" ml={10}>
             <DesktopNav />
           </Flex>
         </Flex>
@@ -112,45 +84,66 @@ export default function WithSubnavigation() {
           spacing={6}
         >
           <Flex align="center" justify="center">
-          <Box p={2}>
-            <Identicon mr={2} size={40} string={user ? user.get("ethAddress") : "No Address Found"}  />
-          </Box>
-            <Tooltip hasArrow label="Click to Copy address" colorScheme="messenger">
-            <Button
-            leftIcon={<FaEthereum/>}
-            mr={2}
-            ml={2}
-            onClick={onCopy}
-            color='black'
-            bgColor="whitesmoke"
-            variant="solid"
-            >
-            {hasCopied ? "Copied" : "Ethereum Address"}
-            </Button>
-            </Tooltip>
-          {/* Logout */}
-          <Button
+            {isAuthenticated && (
+              <Box p={2}>
+                <Identicon
+                  mr={2}
+                  size={40}
+                  string={user ? user.get("ethAddress") : "No Address Found"}
+                />
+              </Box>
+            )}
+
+            {isAuthenticated && (
+              <Tooltip
+                hasArrow
+                label="Click to Copy address"
+                colorScheme="messenger"
+              >
+                <Button
+                  leftIcon={<FaEthereum />}
+                  mr={2}
+                  ml={2}
+                  onClick={onCopy}
+                  color="black"
+                  bgColor="whitesmoke"
+                  variant="solid"
+                >
+                  {hasCopied ? "Copied" : "Ethereum Address"}
+                </Button>
+              </Tooltip>
+            )}
+
+            {/* Logout */}
+            {isAuthenticated && (
+              <Button
                 disabled={isAuthenticating}
-                colorScheme='red'
-                variant='outline'
+                colorScheme="red"
+                variant="outline"
                 mx={2}
-                onClick={() => logout()}>Logout</Button>
-          <Button
-          ml={2}
-            onClick={onOpen}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bgGradient="linear(to-r, purple.500, pink.500)"
-            href={"#"}
-            _hover={{
-              bgGradient: "linear(to-l, purple.500, pink.700)",
-            }}
-          >
-            Connect Wallet
-          </Button>
+                onClick={() => logout()}
+              >
+                Logout
+              </Button>
+            )}
+            {!isAuthenticated && (
+              <Button
+                ml={2}
+                onClick={onOpen}
+                fontSize={"sm"}
+                fontWeight={600}
+                color={"white"}
+                bgGradient="linear(to-r, purple.500, pink.500)"
+                href={"#"}
+                _hover={{
+                  bgGradient: "linear(to-l, purple.500, pink.700)",
+                }}
+              >
+                Connect Wallet
+              </Button>
+            )}
           </Flex>
-        
+
           <ModelBox isOpen={isOpen} onClose={onClose} />
         </Stack>
       </Flex>
@@ -174,7 +167,6 @@ const DesktopNav = () => {
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Link
-              
                 as={ReachLink}
                 to={navItem.href}
                 fontSize={"md"}
@@ -250,6 +242,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
   );
 };
 
+// Navbar Links
 const NAV_ITEMS = [
   {
     label: "Home",

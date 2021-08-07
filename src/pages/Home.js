@@ -65,12 +65,12 @@ export default function Home() {
           <Button
             onClick={() => {
               /* create flow */
-              // createFlow(
-              //   200,
-              //   100,
-              //   '0x3f84205744D06370Aa0dbE704f59CBE36FF7b2Bb',
-              //   user.get('ethAddress')
-              // );
+              createFlow(
+                200,
+                100,
+                '0x3f84205744D06370Aa0dbE704f59CBE36FF7b2Bb',
+                user.get('ethAddress')
+              );
               /* modify flow */
               // modifyFlow(
               //   user.get('ethAddress'),

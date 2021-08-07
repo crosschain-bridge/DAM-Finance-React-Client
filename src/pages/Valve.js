@@ -107,10 +107,6 @@ const Valve = () => {
           <Text fontSize="5xl" fontWeight="bold">
             $2,120.42
           </Text>
-          <Spacer />
-          <Select variant="outline" placeholder="Share price" w="250px">
-            <option>Assets under management</option>
-          </Select>
         </Flex>
 
 
