@@ -22,6 +22,8 @@ import {
   ButtonGroup,
   Box,
 } from "@chakra-ui/react";
+  import { useTable } from "react-table";
+  import { useMemo } from "react";
 import {
   FiHome,
   FiPieChart,
@@ -36,6 +38,76 @@ import {
 import {Link as RouterLink} from "react-router-dom"
 
 export default function Profile() {
+    const columns = useMemo(
+        () => [
+          {
+            Header: "Pool",
+            accessor: "name",
+          },
+          {
+            Header: "Invested Amount",
+            accessor: "invested_amount",
+          },
+          {
+            Header: "Uninvested Amount",
+            accessor: "uninvested_amount",
+          },
+          {
+            Header: "Total Deposited",
+            accessor: "deposited",
+          },
+          {
+            Header: "Withdrawable Amount",
+            accessor: "withdraw",
+          },
+        ],
+        []
+      );
+      const data = useMemo(
+        () => [
+          {
+            name: "USF Fund 1",
+            invested_amount: "600",
+            uninvested_amount: "900",
+            deposited: '800',
+            withdraw: '600'
+          },
+          {
+            name: "USF Fund 1",
+            invested_amount: "1000",
+            uninvested_amount: "300",
+            deposited: '800',
+            withdraw: '600'
+          },
+          {
+            name: "USF Fund 1",
+            invested_amount: "1000",
+            uninvested_amount: "500",
+            deposited: '800',
+            withdraw: '600'
+          },
+          {
+            name: "USF Fund 1",
+            invested_amount: "1000",
+            uninvested_amount: "800",
+            deposited: '800',
+            withdraw: '600'
+          },
+          {
+            name: "USF Fund 1",
+            invested_amount: "1000",
+            uninvested_amount: "800",
+            deposited: '800',
+            withdraw: '600'
+          },
+        ],
+        []
+      );
+    
+      const tableInstance = useTable({ columns, data });
+      const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+        tableInstance;
+
   const [display, changeDisplay] = useState("hide");
   return (
     <Flex
@@ -143,7 +215,7 @@ export default function Profile() {
         w={["100%", "100%", "60%", "60%", "55%"]}
         p="3%"
         flexDir="column"
-        overflow="auto"
+        overflow="hidden"
         minH="100vh"
       >
         <Heading fontWeight="normal" mb={4} letterSpacing="wide">
@@ -157,7 +229,7 @@ export default function Profile() {
             mt={2}
           />
           <Box ml={6}>
-            <Text color="gray.400" fontSize="sm" fontWeight="500" mt="10px">
+          <Text color="gray.400" fontSize="sm" fontWeight="500" mt="10px">
               Pool Balance
             </Text>
             <Text fontWeight="bold" fontSize="2xl">
@@ -166,169 +238,62 @@ export default function Profile() {
           </Box>
         </Flex>
 
-        <Flex justifyContent="space-between" mt={8}>
-          <Flex align="flex-end">
-            <Heading as="h2" size="lg" letterSpacing="tight">
-              Transactions
-            </Heading>
-            <Text fontSize="small" color="gray" ml={4}>
-              Apr 2021
-            </Text>
-          </Flex>
-          <IconButton icon={<FiCalendar />} />
-        </Flex>
-        <Flex flexDir="column">
-          <Flex overflow="auto">
-            <Table variant="unstyled" mt={4}>
-              <Thead>
-                <Tr color="gray">
-                  <Th>Transaction</Th>
-                  <Th>Top Assets</Th>
-                  <Th isNumeric>Value</Th>
-                  <Th isNumeric>Pool Value</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                <Tr>
-                  <Td>
-                    <Flex align="center">
-                      <Avatar size="sm" mr={2} src="amazon.jpeg" />
-                      <Flex flexDir="column">
-                        <Heading size="sm" letterSpacing="tight">
-                          USF Fund I
-                        </Heading>
-                      </Flex>
-                    </Flex>
-                  </Td>
-                  <Td>WETH</Td>
-                  <Td isNumeric>$2,000</Td>
-                  <Td isNumeric>
-                    <Text fontWeight="bold" display="inline-table">
-                      -$242
-                    </Text>
-                    .00
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    <Flex align="center">
-                      <Avatar size="sm" mr={2} src="starbucks.png" />
-                      <Flex flexDir="column">
-                        <Heading size="sm" letterSpacing="tight">
-                          USF Fund I
-                        </Heading>
-                      </Flex>
-                    </Flex>
-                  </Td>
-                  <Td>WBTC</Td>
-                  <Td isNumeric>+$23</Td>
-                  <Td isNumeric>
-                    <Text fontWeight="bold" display="inline-table">
-                      -$32
-                    </Text>
-                    .00
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    <Flex align="center">
-                      <Avatar size="sm" mr={2} src="youtube.png" />
-                      <Flex flexDir="column">
-                        <Heading size="sm" letterSpacing="tight">
-                          USF Fund I
-                        </Heading>
-                      </Flex>
-                    </Flex>
-                  </Td>
-                  <Td>USDC</Td>
-                  <Td isNumeric>+$4</Td>
-                  <Td isNumeric>
-                    <Text fontWeight="bold" display="inline-table">
-                      -$112
-                    </Text>
-                    .00
-                  </Td>
-                </Tr>
-                {display == "show" && (
-                  <>
-                    <Tr>
-                      <Td>
-                        <Flex align="center">
-                          <Avatar size="sm" mr={2} src="amazon.jpeg" />
-                          <Flex flexDir="column">
-                            <Heading size="sm" letterSpacing="tight">
-                              USF Fund I
-                            </Heading>
-                          </Flex>
-                        </Flex>
-                      </Td>
-                      <Td>DAI</Td>
-                      <Td isNumeric>+$2</Td>
-                      <Td isNumeric>
-                        <Text fontWeight="bold" display="inline-table">
-                          -$242
-                        </Text>
-                        .00
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td>
-                        <Flex align="center">
-                          <Avatar size="sm" mr={2} src="starbucks.png" />
-                          <Flex flexDir="column">
-                            <Heading size="sm" letterSpacing="tight">
-                              USF Fund I
-                            </Heading>
-                          </Flex>
-                        </Flex>
-                      </Td>
-                      <Td>MLN</Td>
-                      <Td isNumeric>+$23</Td>
-                      <Td isNumeric>
-                        <Text fontWeight="bold" display="inline-table">
-                          -$32
-                        </Text>
-                        .00
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td>
-                        <Flex align="center">
-                          <Avatar size="sm" mr={2} src="youtube.png" />
-                          <Flex flexDir="column">
-                            <Heading size="sm" letterSpacing="tight">
-                              USF Fund I
-                            </Heading>
-                          </Flex>
-                        </Flex>
-                      </Td>
-                      <Td>WBTC</Td>
-                      <Td isNumeric>+$4</Td>
-                      <Td isNumeric>
-                        <Text fontWeight="bold" display="inline-table">
-                          -$112
-                        </Text>
-                        .00
-                      </Td>
-                    </Tr>
-                  </>
-                )}
-              </Tbody>
-            </Table>
-          </Flex>
-          <Flex align="center">
-            <Divider />
-            <IconButton
-              icon={display == "show" ? <FiChevronUp /> : <FiChevronDown />}
-              onClick={() => {
-                if (display == "show") {
-                  changeDisplay("none");
-                } else {
-                  changeDisplay("show");
+        <Flex alignItems='center' ml={18} justifyContent="space-between" mt={8}>
+          <Flex>
+          <Box border="1px" borderColor="gray.600" rounded="lg">
+      <Table size="lg" {...getTableProps()}>
+        <Thead>
+          {
+            // Loop over the header rows
+            headerGroups.map((headerGroup, idx) => (
+              // Apply the header row props
+              <Tr {...headerGroup.getHeaderGroupProps()}>
+                {
+                  // Loop over the headers in each row
+                  headerGroup.headers.map((column) => (
+                    // Apply the header cell props
+                    <Th {...column.getHeaderProps()}>
+                      {
+                        // Render the header
+                        column.render("Header")
+                      }
+                    </Th>
+                  ))
                 }
-              }}
-            />
-            <Divider />
+              </Tr>
+            ))
+          }
+        </Thead>
+        <Tbody {...getTableBodyProps()}>
+          {
+            // Loop over the table rows
+            rows.map((row) => {
+              // Prepare the row for display
+              prepareRow(row);
+              return (
+                // Apply the row props
+                <Tr {...row.getRowProps()}>
+                  {
+                    // Loop over the rows cells
+                    row.cells.map((cell) => {
+                      // Apply the cell props
+                      return (
+                        <Td {...cell.getCellProps()}>
+                          {
+                            // Render the cell contents
+                            cell.render("Cell")
+                          }
+                        </Td>
+                      );
+                    })
+                  }
+                </Tr>
+              );
+            })
+          }
+        </Tbody>
+      </Table>
+    </Box>
           </Flex>
         </Flex>
       </Flex>
@@ -343,41 +308,6 @@ export default function Profile() {
         minW={[null, null, "300px", "300px", "400px"]}
       >
         <Flex alignContent="center">
-          <InputGroup
-            bgColor="#fff"
-            mb={4}
-            borderColor="purple.700"
-            borderRadius="10px"
-            mr={2}
-          >
-            <InputLeftElement
-              pointerEvents="none"
-              Icon={<FiSearch color="gray" />}
-            />
-            <Input type="number" placeholder="Search" borderRadius="10px" />
-          </InputGroup>
-          <IconButton
-            icon={<FiBell />}
-            fontSize="sm"
-            bgColor="#fff"
-            borderRadius="50%"
-            p="10px"
-          />
-          <Flex
-            w={30}
-            h={25}
-            bgColor="#B57295"
-            borderRadius="50%"
-            color="#fff"
-            align="center"
-            justify="center"
-            ml="-3"
-            mt="-2"
-            zIndex="100"
-            fontSize="xs"
-          >
-            2
-          </Flex>
         </Flex>
         </Flex>
     </Flex>
