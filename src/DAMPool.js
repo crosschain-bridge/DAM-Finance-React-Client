@@ -19,7 +19,7 @@ function checkIfInit() {
 
 export function initDAMPool(poolAddr) {
     try {
-        pool = new web3.eth.Contract(DAMPool.abi, poolAddr);
+        pool = new web3.eth.Contract(DAMPool, poolAddr);
         console.log(`DAMPool ${poolAddr} initialized`);
     } catch (err) {
         console.log("initDAMPool ERR: ", err);

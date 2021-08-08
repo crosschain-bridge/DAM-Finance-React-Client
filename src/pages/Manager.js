@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Flex,
   Heading,
@@ -21,54 +21,85 @@ import {
   WrapItem,
   ButtonGroup,
   Box,
+  Stack
 } from "@chakra-ui/react";
 import {
   FiHome,
   FiPieChart,
   FiDollarSign,
   FiBox,
-  FiCalendar,
   FiChevronDown,
   FiChevronUp,
-  FiSearch,
-  FiBell,
 } from "react-icons/fi";
 import { useMoralis } from "react-moralis";
-import {isManager,initDAMPool,getAaveDepositData,aaveDAIDeposit,aaveDAIRedeem,topupDAMPool,getAaveRedeemData,calcTotalValue,callOnAdapter,topupComptroller} from "../DAMPool"
-import {Link as RouterLink} from "react-router-dom"
+import { GetPools } from "../queries/DadyShark";
+import {
+  isManager,
+  initDAMPool,
+  getAaveDepositData,
+  aaveDAIDeposit,
+  aaveDAIRedeem,
+  topupDAMPool,
+  getAaveRedeemData,
+  calcTotalValue,
+  callOnAdapter,
+  topupComptroller,
+} from "../DAMPool";
 
+import { Link as RouterLink } from "react-router-dom";
 
 export default function Manager() {
   const [display, changeDisplay] = useState("hide");
-  const {user} = useMoralis();
+  const [pools, setPools] = useState();
+  const { user, isWeb3Enabled } = useMoralis();
 
+  const getPoolData = async () => {
+    const data = await GetPools();
+    console.log("Pools", data.data.comptrollers);
+    setPools(data.data.comptrollers);
+  };
 
-  const checkIsManager = () => {
-    const ismanager = isManager(user.get('ethAddress'))
-    console.log(ismanager);
-  }
+  useEffect(() => {
+    if (isWeb3Enabled && user) {
+      initDAMPool(""); // pool address manually added
+      getPoolData();
+    }
+  }, [isWeb3Enabled, user]);
 
-  const handleaaveDAIDeposit = () => {
-    const data = aaveDAIDeposit(user.get('ethAddress'),200);
-  }
+  // user address
+  const userAddress = user?.attributes.accounts[0];
+  console.log("USERAddress",userAddress);
 
-  const handleaaveDAIRedeem = () => {
-    const data = aaveDAIRedeem(user.get('ethAddress'),200);
-  }
+  const checkIsManager = async () => {
+    console.log(userAddress);
+    const ismanager = await isManager(user.get("ethAddress"));
+    console.log(`ismanager: ${ismanager}`);
+  };
 
-  const handleTopUpDAMPool = () => {
-    const data = topupDAMPool(user.get('ethAddress'));
-  }
+  const handleaaveDAIDeposit = async () => {
+    const data = await aaveDAIDeposit(userAddress, 200);
+  };
 
-  const handleTopUpComptroller = () => {
-    const data = topupComptroller(user.get('ethAddress'),10);
-  }
+  const handleaaveDAIRedeem = async () => {
+    const data = await aaveDAIRedeem(userAddress, 200);
+  };
 
-  const handlegetAaveDepositData = () => {
+  const handleTopUpDAMPool = async () => {
+    
+    console.log("((((((((((",userAddress);
+    const data = await topupDAMPool(userAddress);
+  };
+
+  const handleTopUpComptroller = async () => {
+    const data = await topupComptroller(userAddress, 10);
+  };
+
+  const handlegetAaveDepositData = async () => {
     //params are tokenaddress and amount
-    const data = getAaveDepositData("xxdfsdfdsa",300);
-  }
+    const data = await getAaveDepositData("xxdfsdfdsa", 300);
+  };
 
+  console.log(pools);
   return (
     <Flex
       h={[null, null, "100vh"]}
@@ -110,10 +141,12 @@ export default function Manager() {
                 <Link
                   display={["none", "none", "flex", "flex", "flex"]}
                   href="/"
-                  _hover={{textDecor: "none"}}
+                  _hover={{ textDecor: "none" }}
                 >
                   <Icon as={FiHome} fontSize="2xl" className="active-icon" />
-                  <Text className="active" ml={2}>Home</Text>
+                  <Text className="active" ml={2}>
+                    Home
+                  </Text>
                 </Link>
               </Flex>
 
@@ -121,7 +154,7 @@ export default function Manager() {
                 <Link
                   display={["none", "none", "flex", "flex", "flex"]}
                   href="#"
-                  _hover={{textDecor: "none"}}
+                  _hover={{ textDecor: "none" }}
                 >
                   <Icon as={FiPieChart} fontSize="2xl" />
                   <Text ml={2}>Token Balance</Text>
@@ -132,7 +165,7 @@ export default function Manager() {
                 <Link
                   display={["none", "none", "flex", "flex", "flex"]}
                   href="#"
-                  _hover={{textDecor: "none"}}
+                  _hover={{ textDecor: "none" }}
                 >
                   <Icon as={FiDollarSign} fontSize="2xl" />
                   <Text ml={2}>Wallet</Text>
@@ -143,7 +176,7 @@ export default function Manager() {
                 <Link
                   display={["none", "none", "flex", "flex", "flex"]}
                   href="#"
-                  _hover={{textDecor: "none"}}
+                  _hover={{ textDecor: "none" }}
                 >
                   <Icon as={FiBox} fontSize="2xl" />
                   <Text ml={2}>Assets</Text>
@@ -155,7 +188,7 @@ export default function Manager() {
                   to="/protocol"
                   display={["none", "none", "flex", "flex", "flex"]}
                   href="#"
-                  _hover={{textDecor: "none"}}
+                  _hover={{ textDecor: "none" }}
                 >
                   <Icon as={FiDollarSign} fontSize="2xl" />
                   <Text ml={2}>Protocol</Text>
@@ -182,178 +215,70 @@ export default function Manager() {
           Welcome back, Manager
         </Heading>
 
-        <Flex dir="row" align="center" justify="flex-start">
-          <Avatar
-            name="USDC"
-            src="https://cryptologos.cc/logos/usd-coin-usdc-logo.png"
-            mt={2}
-          />
-          <Box ml={6}>
-            <Text color="gray.400" fontSize="sm" fontWeight="500" mt="10px">
-              Pool Balance
-            </Text>
-            <Text fontWeight="bold" fontSize="2xl">
-              $5,750.20
-            </Text>
-          </Box>
-        </Flex>
-
-        <Flex justifyContent="space-between" mt={8}>
+        <Flex justifyContent="space-between" mt={4}>
           <Flex align="flex-end">
-            <Heading as="h2" size="lg" letterSpacing="tight">
-              Transactions
+            <Heading as="h2" size="lg" mt={6} letterSpacing="tight">
+              Pools of Manager
             </Heading>
             <Text fontSize="small" color="gray" ml={4}>
-              Apr 2021
+              Aug 2021
             </Text>
           </Flex>
-          <IconButton icon={<FiCalendar />} />
+          {/* <IconButton icon={<FiCalendar />} /> */}
         </Flex>
         <Flex flexDir="column">
           <Flex overflow="auto">
             <Table variant="unstyled" mt={4}>
               <Thead>
                 <Tr color="gray">
-                  <Th>Transaction</Th>
+                  <Th>Pools</Th>
                   <Th>Top Assets</Th>
-                  <Th isNumeric>Value</Th>
-                  <Th isNumeric>Pool Value</Th>
                 </Tr>
               </Thead>
-              <Tbody>
-                <Tr>
-                  <Td>
-                    <Flex align="center">
+
+              <Tbody >
+                {/* This is repetative */}
+                {pools.map(pool => {
+            
+                  return (
+                    <Tr>
+                      <Td>
+                      <Flex align="center">
                       <Avatar size="sm" mr={2} src="amazon.jpeg" />
                       <Flex flexDir="column">
                         <Heading size="sm" letterSpacing="tight">
-                          USF Fund I
+                          {pool.pool.name} 
                         </Heading>
                       </Flex>
                     </Flex>
-                  </Td>
-                  <Td>WETH</Td>
-                  <Td isNumeric>$2,000</Td>
-                  <Td isNumeric>
-                    <Text fontWeight="bold" display="inline-table">
-                      -$242
-                    </Text>
-                    .00
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    <Flex align="center">
-                      <Avatar size="sm" mr={2} src="starbucks.png" />
-                      <Flex flexDir="column">
-                        <Heading size="sm" letterSpacing="tight">
-                          USF Fund I
-                        </Heading>
-                      </Flex>
-                    </Flex>
-                  </Td>
-                  <Td>WBTC</Td>
-                  <Td isNumeric>+$23</Td>
-                  <Td isNumeric>
-                    <Text fontWeight="bold" display="inline-table">
-                      -$32
-                    </Text>
-                    .00
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td>
-                    <Flex align="center">
-                      <Avatar size="sm" mr={2} src="youtube.png" />
-                      <Flex flexDir="column">
-                        <Heading size="sm" letterSpacing="tight">
-                          USF Fund I
-                        </Heading>
-                      </Flex>
-                    </Flex>
-                  </Td>
-                  <Td>USDC</Td>
-                  <Td isNumeric>+$4</Td>
-                  <Td isNumeric>
-                    <Text fontWeight="bold" display="inline-table">
-                      -$112
-                    </Text>
-                    .00
-                  </Td>
-                </Tr>
-                {display == "show" && (
-                  <>
-                    <Tr>
-                      <Td>
-                        <Flex align="center">
-                          <Avatar size="sm" mr={2} src="amazon.jpeg" />
-                          <Flex flexDir="column">
-                            <Heading size="sm" letterSpacing="tight">
-                              USF Fund I
-                            </Heading>
-                          </Flex>
-                        </Flex>
-                      </Td>
-                      <Td>DAI</Td>
-                      <Td isNumeric>+$2</Td>
-                      <Td isNumeric>
-                        <Text fontWeight="bold" display="inline-table">
-                          -$242
-                        </Text>
-                        .00
-                      </Td>
+                        </Td>
+                      <Td>{pool.pool.assetName}</Td>
                     </Tr>
-                    <Tr>
-                      <Td>
-                        <Flex align="center">
-                          <Avatar size="sm" mr={2} src="starbucks.png" />
-                          <Flex flexDir="column">
-                            <Heading size="sm" letterSpacing="tight">
-                              USF Fund I
-                            </Heading>
-                          </Flex>
-                        </Flex>
-                      </Td>
-                      <Td>MLN</Td>
-                      <Td isNumeric>+$23</Td>
-                      <Td isNumeric>
-                        <Text fontWeight="bold" display="inline-table">
-                          -$32
-                        </Text>
-                        .00
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td>
-                        <Flex align="center">
-                          <Avatar size="sm" mr={2} src="youtube.png" />
-                          <Flex flexDir="column">
-                            <Heading size="sm" letterSpacing="tight">
-                              USF Fund I
-                            </Heading>
-                          </Flex>
-                        </Flex>
-                      </Td>
-                      <Td>WBTC</Td>
-                      <Td isNumeric>+$4</Td>
-                      <Td isNumeric>
-                        <Text fontWeight="bold" display="inline-table">
-                          -$112
-                        </Text>
-                        .00
-                      </Td>
-                    </Tr>
-                  </>
-                )}
+                  )
+                })}
               </Tbody>
             </Table>
           </Flex>
+
+          <Stack direction="row" space={4}>
+            <Button onClick={getPoolData}>GEt Pool data</Button>
+            <Button onClick={checkIsManager}>Check manager</Button>
+            <Button onClick={handleaaveDAIDeposit}>DAI Desposite</Button>
+            <Button onClick={handleaaveDAIRedeem}>DAI Redeem</Button>
+            <Button onClick={handleTopUpDAMPool}>Topup Pool</Button>
+            <Button onCLick={topupComptroller}>Topup Comptroller</Button>
+            <Button onCLick={handleTopUpDAMPool}>Handle Topup DAM Pool</Button>
+            <Button onCLick={handleTopUpComptroller}>
+              Handle Topup comptroller
+            </Button>
+          </Stack>
+
           <Flex align="center">
             <Divider />
             <IconButton
-              icon={display == "show" ? <FiChevronUp /> : <FiChevronDown />}
+              icon={display === "show" ? <FiChevronUp /> : <FiChevronDown />}
               onClick={() => {
-                if (display == "show") {
+                if (display === "show") {
                   changeDisplay("none");
                 } else {
                   changeDisplay("show");
@@ -364,88 +289,6 @@ export default function Manager() {
           </Flex>
         </Flex>
       </Flex>
-
-      {/* Aave transaction */}
-      <Flex
-        w={["100%", "100%", "30%"]}
-        bgColor="white"
-        p="3%"
-        flexDir="column"
-        overflow="auto"
-        minW={[null, null, "300px", "300px", "400px"]}
-      >
-        <Flex alignContent="center">
-          <InputGroup
-            bgColor="#fff"
-            mb={4}
-            borderColor="purple.700"
-            borderRadius="10px"
-            mr={2}
-          >
-            <InputLeftElement
-              pointerEvents="none"
-              Icon={<FiSearch color="gray" />}
-            />
-            <Input type="number" placeholder="Search" borderRadius="10px" />
-          </InputGroup>
-          <IconButton
-            icon={<FiBell />}
-            fontSize="sm"
-            bgColor="#fff"
-            borderRadius="50%"
-            p="10px"
-          />
-          <Flex
-            w={30}
-            h={25}
-            bgColor="#B57295"
-            borderRadius="50%"
-            color="#fff"
-            align="center"
-            justify="center"
-            ml="-3"
-            mt="-2"
-            zIndex="100"
-            fontSize="xs"
-          >
-            2
-          </Flex>
-        </Flex>
-
-        {/* <Flex flexDir="column" my={4}>
-                    <Flex justify="space-between" mb={2}>
-                        <Text>Current Balance</Text>
-                        <Text fontWeight="bold">$xx</Text>
-                    </Flex>
-                    <Flex justify="space-between">
-                        <Text>Withdraw limit</Text>
-                        <Text fontWeight="bold">$xx</Text>
-                    </Flex>
-                </Flex> */}
-        <Heading letterSpacing="tight" size="md" my={4}>
-          Interact with Aave{" "}
-        </Heading>
-        <ButtonGroup>
-          <Button>Deposit</Button>
-          <Button>Withdraw</Button>
-        </ButtonGroup>
-        <Button
-          mt={4}
-          bgColor="purple.700"
-          color="#fff"
-          p={7}
-          borderRadius={15}
-          _hover={{ bgColor: "purple.500", color: "#fff" }}
-        >
-          Confirm Transaction
-        </Button>
-      </Flex>
     </Flex>
   );
-}
-
-{
-  /* <WrapItem>
-<Avatar name='USDC' src='https://cryptologos.cc/logos/usd-coin-usdc-logo.png' className='' />
-</WrapItem> */
 }

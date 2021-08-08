@@ -44,8 +44,9 @@ import {
   calcTotalUninvested,
   initComptroller,
 } from '../comptroller';
-import { aaveDAIRedeem } from '../DAMPool';
+import { aaveDAIRedeem,calcTotalValue,initDAMPool } from '../DAMPool';
 import aaveDAIDetails from '../denominationAsset.json';
+import {GetPool} from "../queries/DadyShark"
 
 const WithDrawButton = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -183,16 +184,20 @@ const UpgradeButton = (props) => {
 
 const Valve = () => {
   const { compAdd } = useParams();
-
   const [data, setData] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalInvested, setTotalInvested] = useState(0);
   const [totalUnInvested, setTotalUnInvested] = useState(0);
-
+  const [flowAmount, setFlowAmount] = useState('');
   const { user, isWeb3Enabled } = useMoralis();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [comptroller,setComptroller] = useState();
 
-  const [flowAmount, setFlowAmount] = useState('');
+  const getPoolData = async() => {
+    const data = await GetPool(compAdd);
+    console.log('SINGLE POOL DATA',data.data.comptroller);
+    setComptroller(data.data.comptroller);
+  }
 
   const getTotalAmount = async () => {
     const data = await calcTotalAmount();
@@ -227,6 +232,7 @@ const Valve = () => {
     );
   };
 
+
   const getWithDrawAmount = async () => {
     const withdrawableAmount = await withdrawable(user?.attributes.accounts[0]);
     console.log('WITHDRAWABLE', withdrawableAmount);
@@ -236,12 +242,25 @@ const Valve = () => {
   useEffect(() => {
     if (isWeb3Enabled && user) {
       initComptroller(compAdd);
+      getPoolData();
       getTotalAmount();
       getTotalInvested();
       getTotalUnInvested();
       getWithDrawAmount();
     }
   }, [user, isWeb3Enabled, compAdd]);
+
+  const getCalcValue = async() => {
+    const data =await calcTotalValue();
+    console.log(data);
+  }
+
+  useEffect(() => {
+    if(isWeb3Enabled && user && comptroller){
+      initDAMPool(comptroller.pool.id);
+      getCalcValue();
+    }
+  },[user,isWeb3Enabled,comptroller])
 
   return (
     <Flex direction="column" h="100vh">
@@ -255,7 +274,7 @@ const Valve = () => {
             bg="teal.300"
           ></Avatar>
           <Text fontSize="3xl" fontWeight="bold" ml={4}>
-            USF Fund I
+            {comptroller.pool.name}
           </Text>
           <Spacer />
           <Button
@@ -270,7 +289,7 @@ const Valve = () => {
               bgGradient: 'linear(to-l, cyan.500, blue.400)',
             }}
           >
-            Deposit
+            Deposit 
           </Button>
           <UpgradeButton ml={2} />
           <WithDrawButton ml={2} withdrawable={data} />
@@ -299,7 +318,7 @@ const Valve = () => {
         </Flex>
         <Box m="50px 0 0 30px">
           <Text fontSize="sm" color="gray.500">
-            Total Asset
+            Asset Name - <span style={{fontWeight:"bold"}}>{comptroller.pool.assetName}</span>
           </Text>
         </Box>
 
@@ -315,7 +334,7 @@ const Valve = () => {
           }}
         >
           <Text fontSize="5xl" fontWeight="bold">
-            $2,120.42
+            ${totalAmount}
           </Text>
         </Flex>
 
