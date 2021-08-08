@@ -23,7 +23,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react"
 import NavBar from "../components/NavBar/index";
-import {createFlow} from "../superfluid"
+import {createFlow, upgradeToken,getSuperTokenBalance,getTokenBalance } from "../superfluid"
 import { useMoralis } from "react-moralis";
 // import Graph from "../components/Graph/index";
 import WrapCard from "../components/WrapCard";
@@ -31,6 +31,8 @@ import { VscCloudDownload } from "react-icons/vsc";
 import axios from "axios";
 import { useParams } from "react-router";
 import {withdrawable,withdrawAmount,calcUserInvested,calcUserUninvested,calcShare,calcTotalAmount,getNetFlow,calcTotalInvested,calcTotalUninvested,initComptroller} from "../comptroller"
+import { aaveDAIRedeem } from "../DAMPool";
+import aaveDAIDetails from "../denominationAsset.json"
 
 
 const WithDrawButton =  (props) => {
@@ -40,30 +42,30 @@ const WithDrawButton =  (props) => {
   const [data,setData] = useState();
   const [Amount,setAmount] = useState();
 
-  const getInvestedAmount = () => {
-    const InvestedAmount = calcUserInvested(userAddress);
-    console.log(InvestedAmount);
-  }
+  // const getInvestedAmount = () => {
+  //   const InvestedAmount = calcUserInvested(userAddress);
+  //   console.log(InvestedAmount);
+  // }
 
-  const getUnInvestedAmount = () => {
-    const unInvestedAmount = calcUserUninvested(userAddress);
-    console.log(unInvestedAmount);
-  }
+  // const getUnInvestedAmount = () => {
+  //   const unInvestedAmount = calcUserUninvested(userAddress);
+  //   console.log(unInvestedAmount);
+  // }
 
-  const getUserShare = () => {
-    const  calShareValue = calcShare(userAddress);
-    console.log(calShareValue);
-  }
+  // const getUserShare = () => {
+  //   const  calShareValue = calcShare(userAddress);
+  //   console.log(calShareValue);
+  // }
 
-  const handleWithDraw = () => {
-    const test =  withdrawAmount(Amount,userAddress);
+  const handleWithDraw = async() => {
+    const test =await  withdrawAmount(Amount,userAddress);
     console.log(test);
   };
 
-
   const getWithDrawAmount = async() => {
-    const amount = await withdrawable(userAddress);
-    setAmount(amount);
+    const withdrawableAmount = await withdrawable(userAddress);
+    console.log("WITHDRAWABLE",withdrawableAmount)
+    setData(withdrawableAmount);
   }
   
   useEffect(() => {
@@ -94,7 +96,7 @@ const WithDrawButton =  (props) => {
           <ModalHeader>WithDraw</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>The Amount You can WithDraw is {Amount}</Text>
+            <Text>The Amount You can WithDraw is {data}</Text>
             <Input onChange={(e) => setAmount(e.target.value)} value={Amount} />
           </ModalBody>
           <ModalFooter>
@@ -107,6 +109,70 @@ const WithDrawButton =  (props) => {
         </ModalContent>
       </Modal>
         </>
+  )
+}
+
+
+
+const UpgradeButton = (props) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {user,web3,Moralis} = useMoralis();
+  const [upgradeAmount,setUpgradeAmount] = useState('');
+  const [token,setToken] = useState();
+
+  const userAddress =user?.attributes.accounts[0]
+  
+
+  useEffect(() => { 
+      getSuperToken();
+  },[])
+
+  const getSuperToken = async() => {
+    const res = await getSuperTokenBalance(userAddress);
+    console.log("SUPERTOKEN",res);
+    setToken(res)
+  }
+  
+  const handleUpgrade =async () => {
+    const data =await upgradeToken(upgradeAmount,userAddress);
+  }
+
+  return (
+    <>
+    <Button 
+            {...props}
+            display={{ base: "none", md: "inline-flex" }}
+            leftIcon={<VscCloudDownload />}
+            fontSize={"sm"}
+            fontWeight={600}
+            color={"white"}
+            bgGradient="linear(to-r, cyan.400, blue.500)"
+            onClick={onOpen}
+            _hover={{
+              bgGradient: "linear(to-l, cyan.500, blue.400)",
+            }}
+          >
+            Upgrade
+          </Button>
+    <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Upgrade your Tokens</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>Enter the Amount you want to upgrade </Text>
+            <Text>The Amount of SuperToken you have is {token}</Text>
+            <Input onChange={(e) => setUpgradeAmount(e.target.value)}   />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blackAlpha" onClick={handleUpgrade}>Upgrade</Button>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 
@@ -159,7 +225,7 @@ const Valve = () => {
   const handleDeposit = () => {
     console.log("Clicked");
     console.log(user.get("ethAddress"));
-    createFlow(500,flowAmount,"0x4C470baC1172B5E20690ce65E1146AfE94Ff1053",user.get("ethAddress") )
+    createFlow(500,flowAmount,"0x4C470baC1172B5E20690ce65E1146AfE94Ff1053",user.get("ethAddress"))
   }
   useEffect(() => {
     initComptroller(compAdd)
@@ -198,6 +264,7 @@ const Valve = () => {
           >
             Deposit
           </Button>
+            <UpgradeButton ml={2} />
           <WithDrawButton ml={2} />
           <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

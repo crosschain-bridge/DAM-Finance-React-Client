@@ -46,7 +46,7 @@ export default function DAMTable() {
             <Td>AaveDaix</Td>
             <Td>100eth</Td>
             <Td>
-            <Link as={ReachLink} to={`valve/${comptrollerAddress}`}>Click me</Link>
+            <Link as={ReachLink} to={`valve/${comptrollerAddress}`}>go to pool</Link>
             </Td>
           </Tr>
         </Tbody>

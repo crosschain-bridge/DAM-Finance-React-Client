@@ -1,6 +1,7 @@
 import SuperfluidSDK from '@superfluid-finance/js-sdk';
 import aaveDAIDetails from './denominationAsset.json';
-import { convertTo } from './utils';
+import ERC20 from './abis/ERC20.json';
+import { convertTo, convertFrom } from './utils';
 import mWeb3 from './mWeb3';
 
 import ERC20ABI from './abis/ERC20.json';
@@ -81,10 +82,56 @@ export async function createFlow(
     .approve(aaveDAIx.address, '1' + '0'.repeat(42))
     .send({ from: userAddr });
 
-  await sf.host.batchCall(
-    createBatchCall(upgradeAmountString, depositAmountString, comptrollerAddr),
-    { from: userAddr }
-  );
+  const superBalance = await getSuperTokenBalance(userAddr);
+
+  if(superBalance >= depositAmount) {
+    await modifyFlow(userAddr, comptrollerAddr, depositAmount);
+  } else {
+    await sf.host.batchCall(
+      createBatchCall(upgradeAmountString, depositAmountString, comptrollerAddr),
+      { from: userAddr }
+    );
+  }
+}
+
+export async function upgradeToken(upgradeAmount, userAddr) {
+  const callData = [
+    [
+      101, // upgrade 'upgradeAmount' aaveDAIx to start a flow to a comptroller
+      aaveDAIx.address,
+      web3.eth.abi.encodeParameters(['uint256'], [convertTo(upgradeAmount, 18)]),
+    ]
+  ];
+
+  try {
+    await sf.host.batchCall(callData, { from: userAddr });
+    console.log(`Upgraded ${upgradeAmount} for user ${userAddr}`);
+  } catch (err) {
+    console.log("upgradeTokens ERR: ", err);
+  }
+
+}
+
+export async function getSuperTokenBalance(userAddr) {
+  try {
+    const aaveDAIxContract = new web3.eth.Contract(ERC20, aaveDAIDetails[0].superToken);
+    const balance = await aaveDAIxContract.methods.balanceOf(userAddr).call();
+    console.log(`aaveDAIx balance of ${userAddr} is ${convertTo(balance, 18)}`);
+    return convertFrom(balance, 18);
+  } catch (err) {
+    console.log("getSuperTokenBalance ERR: ", err);
+  }
+}
+
+export async function getTokenBalance(userAddr) {
+  try {
+    const aaveDAIContract = new web3.eth.Contract(ERC20, aaveDAIDetails.address);
+    const balance = await aaveDAIContract.methods.balanceOf(userAddr).call();
+    console.log(`aaveDAI balance of ${userAddr} is ${convertTo(balance, 18)}`);
+    return convertFrom(balance, 18);
+  } catch (err) {
+    console.log("getTokenBalance ERR: ", err);
+  }
 }
 
 function createBatchCall(upgradeAmount, depositAmount, comptrollerAddr) {

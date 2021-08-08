@@ -251,11 +251,11 @@ const NAV_ITEMS = [
     href: "/",
   },
   {
-    label: "Pool",
-    href: "/valve",
+    label: "Manager",
+    href: "/manager",
   },
   {
-    label: "Profile",
-    href: "/profile",
+    label: "User",
+    href: "/user",
   },
 ];
