@@ -1,5 +1,5 @@
 import ComptrollerV2 from '../abis/ComptrollerV2.json';
-import { convertTo } from './utils';
+import { convertTo, convertFrom } from './utils';
 import mWeb3 from './mWeb3';
 
 let web3 = null;
@@ -16,7 +16,7 @@ function checkIfInit() {
     // Write code to throw an error if initComptroller hasn't been called i.e. comptroller === null
 }
 
-// Functio to initialize a comptroller
+// Function to initialize a comptroller
 export function initComptroller(comptrollerAddr) {
     try {
         comptroller = new web3.eth.Contract(ComptrollerV2.abi, comptrollerAddr);
@@ -30,8 +30,8 @@ export function initComptroller(comptrollerAddr) {
 export async function withdrawable(userAddr) {
     try {
         const amount = await comptroller.methods.withdrawable(userAddr).call();
-        console.log(`User ${userAddr} withdrawable amount is ${convertTo(amount, 18)}`);
-        return convertTo(amount, 18);
+        console.log(`User ${userAddr} withdrawable amount is ${convertFrom(amount, 18)}`);
+        return convertFrom(amount, 18);
     } catch (err) {
         console.log("withdrawable ERR: ", err);
     }
@@ -57,7 +57,7 @@ export async function calcUserInvested(userAddr) {
         // Add flowrate and flowtimestamp that you got from superfluid subgraph
         const investedAmount = await comptroller.methods.calcUserInvested(userAddr, /*flowrate, flowtimestamp*/).call();
         console.log(`${userAddr} invested amount is ${investedAmount.toString()}`);
-        return investedAmount.toString();
+        return convertFrom(investedAmount, 18);
     } catch (err) {
         console.log("calcUserInvested ERR: ", err);
     }
@@ -69,7 +69,7 @@ export async function calcUserUninvested(userAddr) {
     try {
         const uninvestedAmount = await comptroller.methods.calcUserUninvested(userAddr).call();
         console.log(`${userAddr} uninvested amount is ${uninvestedAmount.toString()}`);
-        return uninvestedAmount;
+        return convertFrom(uninvestedAmount, 18);
     } catch (err) {
         console.log("calcUserUninvested ERR: ", err);
     }
@@ -79,7 +79,7 @@ export async function calcShare(userAddr) {
     try {
         const userShare = await comptroller.methods.calcShare(userAddr).call();
         console.log(`Share of ${userAddr} is ${userShare.toString()}`);
-        return userShare.toString();
+        return convertFrom(userShare, 18);
     } catch (err) {
         console.log("calcShare ERR: ", err);
     }
@@ -99,7 +99,7 @@ export async function calcTotalAmount() {
     try {
         const totalAmount = await comptroller.methods._calcTotalAmount().call();
         console.log(`Total amount streamed which are present in ${comptroller.address} is ${totalAmount.toString()}`);
-        return totalAmount.toString();
+        return convertFrom(totalAmount, 18);
     } catch (err) {
         console.log("calcTotalAmount ERR: ", err);
     }
