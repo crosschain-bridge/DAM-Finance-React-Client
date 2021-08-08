@@ -2,6 +2,7 @@
   {
     "name": "aaveDAI",
     "superName": "aaveDAIx",
-    "address": "0x001b3b4d0f3714ca98ba10f6042daebf0b1b7b6f"
+    "address": "0x001b3b4d0f3714ca98ba10f6042daebf0b1b7b6f",
+    "adapter": "0x2900AE01dAD72867184dAe811A1c2a1cF5F947f4"
   }
 ]

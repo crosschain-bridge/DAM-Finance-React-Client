@@ -11,7 +11,7 @@ import {
   Select,
   Image
 } from "@chakra-ui/react";
-import ComptrollerFactory from "../abis/ComptrollerFactory.json"
+import ComptrollerFactory from "../abis/ComptrollerFactory.json";
 import ComptrollerV2 from '../abis/ComptrollerV2.json';
 import DAMPoolFactory from "../abis/DAMPoolFactory.json"
 import { useMoralis } from "react-moralis";
