@@ -1,4 +1,6 @@
-import ComptrollerV2 from '../abis/ComptrollerV2.json';
+import ComptrollerV2 from './abis/ComptrollerV2.json';
+import ERC20 from './abis/ERC20.json';
+import aaveDAIDetails from './denominationAsset.json';
 import { convertTo, convertFrom } from './utils';
 import mWeb3 from './mWeb3';
 
@@ -10,7 +12,10 @@ mWeb3()
     })
     .catch((err) => console.log(err));
 
-export let comptroller;
+const toBN = (number) => web3.utils.toBN(number);
+
+let comptroller;
+let comptrollerAddr;
 
 function checkIfInit() {
     // Write code to throw an error if initComptroller hasn't been called i.e. comptroller === null
@@ -19,8 +24,9 @@ function checkIfInit() {
 // Function to initialize a comptroller
 export function initComptroller(comptrollerAddr) {
     try {
-        comptroller = new web3.eth.Contract(ComptrollerV2.abi, comptrollerAddr);
+        comptroller = new web3.eth.Contract(ComptrollerV2,comptrollerAddr);
         console.log(`Comptroller ${comptrollerAddr} initialized`);
+        return true;
     } catch (err) {
         console.log("initComptroller ERR: ", err)
     };
@@ -88,17 +94,49 @@ export async function calcShare(userAddr) {
 export async function getNetFlow() {
     try {
         const netFlow = await comptroller.methods._getNetFlow().call();
-        console.log(`Net flow of comptroller ${comptroller.address} is ${netFlow.toString()}`);
+        console.log(`Net flow of comptroller ${comptroller.options.address} is ${netFlow.toString()}`);
         return netFlow.toString();
     } catch (err) {
         console.log("getNetFlow ERR: ", err);
     }
 }
 
+// Function to calculate total amount invested in a pool
+// Ideally get the token (denomination asset) using subgraph
+export async function calcTotalInvested() {
+    try {
+        const aaveDAIxContract = new web3.eth.Contract(ERC20, aaveDAIDetails[0].superToken);
+        const totalAmount = await comptroller.methods._calcTotalAmount().call();
+        const uninvestedAmount = await aaveDAIxContract.methods.balanceOf(comptroller.options.address).call();
+        const investedAmount = toBN(totalAmount).sub(toBN(uninvestedAmount));
+        console.log(`Invested amount of comptroller ${comptroller.options.address} is ${convertFrom(investedAmount, 18)}`);
+        return convertFrom(investedAmount, 18);
+    } catch (err) {
+        console.log("calcTotalInvested ERR: ", err);
+    }
+}
+
+// Function to calculate total uninvested amount left in the comptroller
+// Ideally get the token (denomination asset) using subgraph
+export async function calcTotalUninvested() {
+    try {
+        console.log("aaveDAIx address: ", aaveDAIDetails[0].superToken);
+        const aaveDAIxContract = new web3.eth.Contract(ERC20, aaveDAIDetails[0].superToken);
+        console.log(aaveDAIxContract.options.address);
+        console.log("Comptroller address: ", comptroller.options.address);
+        const uninvestedAmount = await aaveDAIxContract.methods.balanceOf(comptroller.options.address).call();
+        console.log(`Uninvested amount of comptroller ${comptroller.options.address} is ${convertFrom(uninvestedAmount, 18)}`);
+        return convertFrom(uninvestedAmount, 18);
+    } catch (err) {
+        console.log("calcTotalUninvested ERR: ", err);
+    }
+}
+
+// Function to calculate total amount (invested + uninvested) of a comptroller
 export async function calcTotalAmount() {
     try {
         const totalAmount = await comptroller.methods._calcTotalAmount().call();
-        console.log(`Total amount streamed which are present in ${comptroller.address} is ${totalAmount.toString()}`);
+        console.log(`Total amount streamed which are present in ${comptroller.options.address} is ${totalAmount.toString()}`);
         return convertFrom(totalAmount, 18);
     } catch (err) {
         console.log("calcTotalAmount ERR: ", err);

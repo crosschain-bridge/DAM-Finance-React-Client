@@ -15,6 +15,7 @@ import NavBar from '../components/NavBar';
 import DAMTable from '../components/table/Table';
 import { initSuperfluid, createFlow, modifyFlow } from '../superfluid';
 import { Link as RouterLink } from 'react-router-dom';
+import {initComptroller} from "../comptroller"
 
 export default function Home() {
   const { Moralis, user, isAuthenticated } = useMoralis();

@@ -251,7 +251,7 @@ const NAV_ITEMS = [
     href: "/",
   },
   {
-    label: "Valve",
+    label: "Pool",
     href: "/valve",
   },
   {

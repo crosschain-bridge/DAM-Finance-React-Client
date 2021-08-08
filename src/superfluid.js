@@ -1,5 +1,4 @@
 import SuperfluidSDK from '@superfluid-finance/js-sdk';
-// import { web3tx, toWad, toBN } from "@decentral.ee/web3-helpers");
 import aaveDAIDetails from './denominationAsset.json';
 import { convertTo } from './utils';
 import mWeb3 from './mWeb3';
