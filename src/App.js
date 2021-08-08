@@ -11,6 +11,7 @@ import CreatePools from './pages/CreatePools';
 import User from './pages/User';
 function App() {
   const { user, enableWeb3, isWeb3Enabled } = useMoralis();
+  
 
   useEffect(() => {
     if (user && !isWeb3Enabled) {

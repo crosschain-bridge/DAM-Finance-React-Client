@@ -98,20 +98,7 @@ export default function Home() {
           </Button>
         </Flex>
         {/* Tabs for table content */}
-        <Tabs variant="line" mt={30} w="100%" p={3}>
-          <TabList>
-            <Tab>Browse Leaderboard</Tab>
-            <Tab>Browse All</Tab>
-            <Tab>My Deposites</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <DAMTable />
-            </TabPanel>
-            <TabPanel></TabPanel>
-            <TabPanel></TabPanel>
-          </TabPanels>
-        </Tabs>
+          <DAMTable mt={10} />
       </Box>
     </Flex>
   );

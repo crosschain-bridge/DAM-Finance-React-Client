@@ -14,18 +14,31 @@ import {
   Link
 } from "@chakra-ui/react";
 import { useTable } from "react-table";
-import { useMemo } from "react";
 import { useMoralis } from "react-moralis";
 import {initComptroller} from "../../comptroller"
 import { Redirect,Link as ReachLink } from "react-router-dom";
+import {GetPool,GetPools,GetWithdrawals} from "../../queries/DadyShark"
 
-export default function DAMTable() {
+export default function DAMTable(props) {
 
+  const [allComptrollers,setAllComptrollers] = useState([]);
   const comptrollerAddress = "0x4C470baC1172B5E20690ce65E1146AfE94Ff1053";
+
+  const GetAllPools = async() =>  {
+    const data =await GetPools();
+    console.log("GET ALL POOLS",data.data.comptrollers);
+    setAllComptrollers(data.data.comptrollers);
+  }
+
+
+  useEffect(() => {
+    GetAllPools();
+  },[])
+  
   
 
   return (
-    <Box border="1px" borderColor="gray.600" rounded="lg">
+    <Box {...props} border="1px" borderColor="gray.600" rounded="lg">
       <Table size="lg">
         <Thead>
           <Tr>
@@ -41,14 +54,19 @@ export default function DAMTable() {
           </Tr>
         </Thead>
         <Tbody >
-          <Tr >
-            <Td>DAMP Pool</Td>
-            <Td>AaveDaix</Td>
-            <Td>100eth</Td>
-            <Td>
-            <Link as={ReachLink} to={`valve/${comptrollerAddress}`}>go to pool</Link>
-            </Td>
-          </Tr>
+          {allComptrollers.map((comp,index) => {
+
+            return (
+              <Tr key={index}>
+                <Td>{comp.pool.name}</Td>
+                <Td>{comp.pool.assetName}</Td>
+                <Td> Hello</Td>
+                <Td>
+                <Link as={ReachLink} to={`valve/${comp.id}`}>go to pool</Link>
+                </Td>
+              </Tr>
+            )
+          })}
         </Tbody>
       </Table>
     </Box>
