@@ -3,7 +3,7 @@ import Fetch from './Fetch';
 const URL =
   'https://api.thegraph.com/subgraphs/name/superfluid-finance/superfluid-mumbai';
 
-export const GetFlowDetails = async ({ owner, recipient, tokenAddress }) => {
+export const GetFlowDetails = async ({ owner, recipient }) => {
   const query = {
     query: `
       flows(where: {
