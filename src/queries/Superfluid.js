@@ -28,3 +28,31 @@ export const GetFlowDetails = async ({ owner, recipient }) => {
     console.log(err);
   }
 };
+
+export const AllFlowsByUser = async ({ user }) => {
+  const query = {
+    query: `
+      flows(where: {
+          owner: "${user.toLowerCase()}"
+        }
+      ){
+        sum
+        flowRate
+        lastUpdate
+        token {
+          name
+          symbol
+        }
+        recipient {
+          id
+        }
+      }`,
+  };
+
+  try {
+    const data = await Fetch(query, URL);
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
