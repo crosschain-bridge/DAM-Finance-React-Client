@@ -34,7 +34,7 @@ export const GetPool = async (address) => {
   const query = {
     query: `
       {
-        comptroller(id: ${address.toLowerCase()}) {
+        comptroller(id: "${address.toLowerCase()}") {
           id
           pool {
             name
@@ -62,7 +62,7 @@ export const GetWithdrawals = async ({ user, comptroller }) => {
   const query = {
     query: `
       {
-        userComptroller(id: ${id}) {
+        userComptroller(id: "${id}") {
           id
           withdrawals
         }
