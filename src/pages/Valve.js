@@ -74,17 +74,19 @@ const WithDrawButton = (props) => {
     console.log(test);
   };
 
-  const getWithDrawAmount = async () => {
-    const withdrawableAmount = await withdrawable(userAddress);
-    console.log('WITHDRAWABLE', withdrawableAmount);
-    setData(withdrawableAmount);
-  };
-
   useEffect(() => {
+    const getWithDrawAmount = async () => {
+      const withdrawableAmount = await withdrawable(
+        user?.attributes.accounts[0]
+      );
+      console.log('WITHDRAWABLE', withdrawableAmount);
+      setData(withdrawableAmount);
+    };
+
     if (isWeb3Enabled && user) {
       getWithDrawAmount();
     }
-  }, []);
+  }, [isWeb3Enabled, user]);
 
   return (
     <>
