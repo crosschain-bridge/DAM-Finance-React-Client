@@ -238,7 +238,7 @@ export default function Manager() {
 
               <Tbody >
                 {/* This is repetative */}
-                {pools.map(pool => {
+                {/* {pools.map(pool => {
             
                   return (
                     <Tr>
@@ -255,12 +255,12 @@ export default function Manager() {
                       <Td>{pool.pool.assetName}</Td>
                     </Tr>
                   )
-                })}
+                })} */}
               </Tbody>
             </Table>
           </Flex>
 
-          <Stack direction="row" space={4}>
+          <Stack direction="column" w="100%" space={4}>
             <Button onClick={getPoolData}>GEt Pool data</Button>
             <Button onClick={checkIsManager}>Check manager</Button>
             <Button onClick={handleaaveDAIDeposit}>DAI Desposite</Button>
@@ -272,21 +272,7 @@ export default function Manager() {
               Handle Topup comptroller
             </Button>
           </Stack>
-
-          <Flex align="center">
-            <Divider />
-            <IconButton
-              icon={display === "show" ? <FiChevronUp /> : <FiChevronDown />}
-              onClick={() => {
-                if (display === "show") {
-                  changeDisplay("none");
-                } else {
-                  changeDisplay("show");
-                }
-              }}
-            />
-            <Divider />
-          </Flex>
+          <Divider />
         </Flex>
       </Flex>
     </Flex>

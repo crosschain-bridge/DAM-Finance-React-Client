@@ -184,6 +184,7 @@ const UpgradeButton = (props) => {
 
 const Valve = () => {
   const { compAdd } = useParams();
+  console.log("COMPTROLLER ADDRESS",compAdd);
   const [data, setData] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalInvested, setTotalInvested] = useState(0);
@@ -263,7 +264,7 @@ const Valve = () => {
   },[user,isWeb3Enabled,comptroller])
 
   return (
-    <Flex direction="column" h="100vh">
+    comptroller ? <Flex direction="column" h="100vh">
       <NavBar />
       {/* Fund Name and Deposite Button */}
       <Box m={5}>
@@ -351,7 +352,7 @@ const Valve = () => {
           <WrapCard title="Total UnInvested" value={totalUnInvested} />
         </Wrap>
       </Box>
-    </Flex>
+    </Flex> : <></>
   );
 };
 
