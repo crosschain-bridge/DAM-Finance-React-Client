@@ -51,7 +51,6 @@ const WithDrawButton = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user, isWeb3Enabled } = useMoralis();
   const userAddress = user?.attributes.accounts[0];
-  const [data, setData] = useState();
   const [Amount, setAmount] = useState();
 
   // const getInvestedAmount = () => {
@@ -73,20 +72,6 @@ const WithDrawButton = (props) => {
     const test = await withdrawAmount(Amount, userAddress);
     console.log(test);
   };
-
-  useEffect(() => {
-    const getWithDrawAmount = async () => {
-      const withdrawableAmount = await withdrawable(
-        user?.attributes.accounts[0]
-      );
-      console.log('WITHDRAWABLE', withdrawableAmount);
-      setData(withdrawableAmount);
-    };
-
-    if (isWeb3Enabled && user) {
-      getWithDrawAmount();
-    }
-  }, [isWeb3Enabled, user]);
 
   return (
     <>
@@ -111,7 +96,7 @@ const WithDrawButton = (props) => {
           <ModalHeader>WithDraw</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>The Amount You can WithDraw is {data}</Text>
+            <Text>The Amount You can WithDraw is {props.withdrawable}</Text>
             <Input onChange={(e) => setAmount(e.target.value)} value={Amount} />
           </ModalBody>
           <ModalFooter>
@@ -199,6 +184,7 @@ const UpgradeButton = (props) => {
 const Valve = () => {
   const { compAdd } = useParams();
 
+  const [data, setData] = useState();
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalInvested, setTotalInvested] = useState(0);
   const [totalUnInvested, setTotalUnInvested] = useState(0);
@@ -241,12 +227,19 @@ const Valve = () => {
     );
   };
 
+  const getWithDrawAmount = async () => {
+    const withdrawableAmount = await withdrawable(user?.attributes.accounts[0]);
+    console.log('WITHDRAWABLE', withdrawableAmount);
+    setData(withdrawableAmount);
+  };
+
   useEffect(() => {
     if (isWeb3Enabled && user) {
       initComptroller(compAdd);
       getTotalAmount();
       getTotalInvested();
       getTotalUnInvested();
+      getWithDrawAmount();
     }
   }, [user, isWeb3Enabled, compAdd]);
 
@@ -280,7 +273,7 @@ const Valve = () => {
             Deposit
           </Button>
           <UpgradeButton ml={2} />
-          <WithDrawButton ml={2} />
+          <WithDrawButton ml={2} withdrawable={data} />
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
