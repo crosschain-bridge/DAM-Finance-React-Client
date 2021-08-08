@@ -33,10 +33,42 @@ import {
   FiSearch,
   FiBell,
 } from "react-icons/fi";
+import { useMoralis } from "react-moralis";
+import {isManager,initDAMPool,getAaveDepositData,aaveDAIDeposit,aaveDAIRedeem,topupDAMPool,getAaveRedeemData,calcTotalValue,callOnAdapter,topupComptroller} from "../DAMPool"
 import {Link as RouterLink} from "react-router-dom"
 
-export default function Profile() {
+
+export default function Manager() {
   const [display, changeDisplay] = useState("hide");
+  const {user} = useMoralis();
+
+
+  const checkIsManager = () => {
+    const ismanager = isManager(user.get('ethAddress'))
+    console.log(ismanager);
+  }
+
+  const handleaaveDAIDeposit = () => {
+    const data = aaveDAIDeposit(user.get('ethAddress'),200);
+  }
+
+  const handleaaveDAIRedeem = () => {
+    const data = aaveDAIRedeem(user.get('ethAddress'),200);
+  }
+
+  const handleTopUpDAMPool = () => {
+    const data = topupDAMPool(user.get('ethAddress'));
+  }
+
+  const handleTopUpComptroller = () => {
+    const data = topupComptroller(user.get('ethAddress'),10);
+  }
+
+  const handlegetAaveDepositData = () => {
+    //params are tokenaddress and amount
+    const data = getAaveDepositData("xxdfsdfdsa",300);
+  }
+
   return (
     <Flex
       h={[null, null, "100vh"]}

@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react';
 import { Switch, Route } from 'react-router-dom';
 import { useMoralis } from 'react-moralis';
 import { initSuperfluid } from './superfluid';
-import Profile from './pages/Profile';
+import Manager from './pages/Manager';
 import Valve from './pages/Valve';
 import Home from './pages/Home';
 import Protocol from './pages/Protocol';
@@ -28,12 +28,10 @@ function App() {
         <Route path="/createpools">
           <CreatePools />
         </Route>
-        <Route exact path="/profile">
-          <Profile />
+        <Route exact path="/manager">
+          <Manager />
         </Route>
-        <Route exact path="/valve">
-          <Valve />
-        </Route>
+        <Route exact path="/valve/:compAdd" children={<Valve />} />
         <Route exact path="/protocol">
           <Protocol />
         </Route>
