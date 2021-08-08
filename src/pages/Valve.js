@@ -222,7 +222,7 @@ const Valve = () => {
     createFlow(
       500,
       flowAmount,
-      '0x4C470baC1172B5E20690ce65E1146AfE94Ff1053',
+      compAdd,
       user.get('ethAddress')
     );
   };
